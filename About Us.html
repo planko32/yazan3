@@ -562,4 +562,21 @@
 
 
   <script src="./nav-links.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var els = document.querySelectorAll('.van-nav-bar__left');
+  els.forEach(function (el) {
+    if (el.getAttribute('data-back-bound')) return;
+    el.setAttribute('data-back-bound','1');
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', function () {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = 'EXARAI.html';
+      }
+    });
+  });
+});
+</script>
 </body></html>
