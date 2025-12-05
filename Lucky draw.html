@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<!-- saved from url=(0027)https://exarai.online/lucky -->
+<html lang="en" class="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- 1764227854320 -->
+  
+  <link rel="icon" href="https://exarai.online/favicon.ico">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="EXARAI">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Lucky draw</title>
+
+  <style>
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg,
+          #f6f7fb 0%,
+          #e8ebf1 50%,
+          #f2f2f2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999999999;
+      overflow: hidden;
+      transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+    }
+
+    .loading-screen.dark-theme {
+      background: linear-gradient(135deg,
+          #0c0b10 0%,
+          #17202d 50%,
+          #0e131b 100%);
+    }
+
+    .loading-screen.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loading-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 50%;
+      animation: float 8s infinite ease-in-out;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .particle:nth-child(1) {
+      left: 5%;
+      animation-delay: 0s;
+      animation-duration: 12s;
+      width: 2px;
+      height: 2px;
+    }
+
+    .particle:nth-child(2) {
+      left: 15%;
+      animation-delay: 1.5s;
+      animation-duration: 10s;
+      width: 4px;
+      height: 4px;
+    }
+
+    .particle:nth-child(3) {
+      left: 25%;
+      animation-delay: 3s;
+      animation-duration: 14s;
+      width: 3px;
+      height: 3px;
+    }
+
+    .particle:nth-child(4) {
+      left: 35%;
+      animation-delay: 0.5s;
+      animation-duration: 9s;
+      width: 2px;
+      height: 2px;
+    }
+
+    .particle:nth-child(5) {
+      left: 45%;
+      animation-delay: 2.5s;
+      animation-duration: 11s;
+      width: 4px;
+      height: 4px;
+    }
+
+    .particle:nth-child(6) {
+      left: 55%;
+      animation-delay: 4s;
+      animation-duration: 13s;
+      width: 3px;
+      height: 3px;
+    }
+
+    .particle:nth-child(7) {
+      left: 65%;
+      animation-delay: 1s;
+      animation-duration: 8s;
+      width: 2px;
+      height: 2px;
+    }
+
+    .particle:nth-child(8) {
+      left: 75%;
+      animation-delay: 3.5s;
+      animation-duration: 15s;
+      width: 4px;
+      height: 4px;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0) scale(0);
+        opacity: 0;
+      }
+
+      5% {
+        opacity: 0.3;
+      }
+
+      15% {
+        opacity: 0.8;
+        transform: translateY(80vh) translateX(10px) scale(0.5);
+      }
+
+      50% {
+        opacity: 1;
+        transform: translateY(50vh) translateX(-5px) scale(1);
+      }
+
+      85% {
+        opacity: 0.8;
+        transform: translateY(20vh) translateX(8px) scale(0.8);
+      }
+
+      95% {
+        opacity: 0.3;
+      }
+
+      100% {
+        transform: translateY(-50px) translateX(-10px) scale(0);
+        opacity: 0;
+      }
+    }
+
+    .logo-container {
+      position: relative;
+      margin-bottom: 60px;
+    }
+
+    .logo-ring {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 30px;
+    }
+
+    .ring-inner,
+    .ring-outer {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      animation: rotate 3s linear infinite;
+    }
+
+    .ring-inner {
+      width: 80px;
+      height: 80px;
+      top: 20px;
+      left: 20px;
+      border-top: 2px solid #00d4ff;
+      border-right: 2px solid #00d4ff;
+      animation-direction: reverse;
+      animation-duration: 2s;
+    }
+
+    .ring-outer {
+      width: 120px;
+      height: 120px;
+      top: 0;
+      left: 0;
+      border-top: 2px solid #ff6b6b;
+      border-left: 2px solid #ff6b6b;
+      animation-duration: 4s;
+    }
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .logo-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+      font-weight: bold;
+      font-size: 48px !important;
+      color: #333;
+      text-shadow: 0 0 20px rgba(0, 102, 204, 0.3);
+      font-display: block;
+      line-height: 1;
+      text-rendering: optimizeSpeed;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .logo-text span {
+      display: inline-block;
+      animation: letterGlow 2s ease-in-out infinite;
+      transform-origin: center;
+      transform: scale(1);
+      font-size: inherit;
+      line-height: inherit;
+      width: auto;
+      height: auto;
+    }
+
+    .logo-t {
+      animation-delay: 0s;
+    }
+
+    .logo-a {
+      animation-delay: 0.2s;
+    }
+
+    .logo-r {
+      animation-delay: 0.4s;
+    }
+
+    .logo-m {
+      animation-delay: 0.6s;
+    }
+
+    .logo-space {
+      width: 20px;
+    }
+
+    .logo-ai {
+      animation-delay: 0.8s;
+      color: #0066cc;
+      text-shadow: 0 0 30px rgba(0, 102, 204, 0.5);
+    }
+
+    @keyframes letterGlow {
+
+      0%,
+      100% {
+        transform: scale(1);
+        text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+      }
+
+      50% {
+        transform: scale(1);
+        text-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+      }
+    }
+
+    .loading-progress {
+      width: 300px;
+      text-align: center;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0066cc, #ff6b6b, #0066cc);
+      background-size: 200% 100%;
+      border-radius: 2px;
+      animation: progressFill 4s ease-in-out forwards,
+        gradientMove 2s linear infinite;
+      width: 0%;
+    }
+
+    @keyframes progressFill {
+      0% {
+        width: 0%;
+      }
+
+      20% {
+        width: 25%;
+      }
+
+      40% {
+        width: 50%;
+      }
+
+      60% {
+        width: 75%;
+      }
+
+      80% {
+        width: 90%;
+      }
+
+      100% {
+        width: 100%;
+      }
+    }
+
+    @keyframes gradientMove {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      100% {
+        background-position: 200% 50%;
+      }
+    }
+
+    .loading-text {
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 16px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      animation: textPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes textPulse {
+
+      0%,
+      100% {
+        opacity: 0.6;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    .tech-lines {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .index-line {
+      position: absolute;
+      background: linear-gradient(90deg,
+          transparent,
+          rgba(0, 102, 204, 0.3),
+          transparent);
+      height: 1px;
+      animation: lineMove 4s linear infinite;
+    }
+
+    .line-1 {
+      top: 20%;
+      width: 200px;
+      left: -200px;
+      animation-delay: 0s;
+    }
+
+    .line-2 {
+      top: 50%;
+      width: 300px;
+      right: -300px;
+      animation-delay: 1s;
+      animation-direction: reverse;
+    }
+
+    .line-3 {
+      top: 80%;
+      width: 150px;
+      left: -150px;
+      animation-delay: 2s;
+    }
+
+    @keyframes lineMove {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(calc(100vw + 200px));
+      }
+    }
+
+    .loading-screen.dark-theme .particle {
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    }
+
+    .loading-screen.dark-theme .logo-text {
+      color: #fff;
+      text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+    }
+
+    .loading-screen.dark-theme .logo-ai {
+      color: #00d4ff;
+      text-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+    }
+
+    .loading-screen.dark-theme .progress-bar {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .loading-screen.dark-theme .progress-fill {
+      background: linear-gradient(90deg, #00d4ff, #ff6b6b, #00d4ff);
+    }
+
+    .loading-screen.dark-theme .loading-text {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .loading-screen.dark-theme .index-line {
+      background: linear-gradient(90deg,
+          transparent,
+          rgba(0, 212, 255, 0.3),
+          transparent);
+    }
+
+    .loading-screen.dark-theme .ring-inner {
+      border-top: 2px solid #00d4ff;
+      border-right: 2px solid #00d4ff;
+    }
+
+    .loading-screen.dark-theme .ring-outer {
+      border-top: 2px solid #ff6b6b;
+      border-left: 2px solid #ff6b6b;
+    }
+
+    @media (max-width: 768px) {
+      .logo-text {
+        font-size: 36px;
+      }
+
+      .logo-ring {
+        width: 100px;
+        height: 100px;
+      }
+
+      .ring-inner {
+        width: 60px;
+        height: 60px;
+        top: 20px;
+        left: 20px;
+      }
+
+      .loading-progress {
+        width: 250px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo-ring {
+        width: 80px;
+        height: 80px;
+      }
+
+      .ring-inner {
+        width: 50px;
+        height: 50px;
+        top: 15px;
+        left: 15px;
+      }
+
+      .ring-outer {
+        width: 80px;
+        height: 80px;
+      }
+
+      .logo-text {
+        font-size: 28px;
+      }
+    }
+  </style>
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/crypto-js-v20251127071734-BXdhhA8o.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/highlight-v20251127071734-sLdeLc1g.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/vendor-v20251127071734-DckFzIAx.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/vue-i18n-v20251127071734-D70_DMns.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/vant-ui-v20251127071734-BYeqPL--.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/pinia-v20251127071734-C-HAYjGE.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/dayjs-v20251127071734-BmMYmPdv.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/element-plus-v20251127071734-DnGA8OQj.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/vue-router-v20251127071734-VRuCLJ8t.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/axios-v20251127071734-CCIbOCoD.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/qrcode-v20251127071734-KwKXGQm2.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/vue-qr-v20251127071734-nGERO--V.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/vueuse-v20251127071734-CMX7PJJ_.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/fingerprint-v20251127071734-DONcYrhz.js">
+  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/bignumber-v20251127071734-yEAtxT-w.js">
+  <link rel="stylesheet" crossorigin="" href="./Lucky draw_files/highlight-v20251127071734-ZgkIHsf0.css">
+  <link rel="stylesheet" crossorigin="" href="./Lucky draw_files/vant-ui-v20251127071734-C767WeoM.css">
+  <link rel="stylesheet" crossorigin="" href="./Lucky draw_files/element-plus-v20251127071734-xGTMDgcT.css">
+  <link rel="stylesheet" crossorigin="" href="./Lucky draw_files/index-v20251127071734-Ccv9kcYE.css">
+<link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/layout-v20251127071734-CfUanefy.js"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/logo-h5-v20251127071734-D7ecjlYj.js"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/level-icon-v20251127071734-BIzRXkxP.js"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/popupSlot-v20251127071734-CKpjmN2i.js"><link rel="stylesheet" crossorigin="" href="./Lucky draw_files/popupSlot-v20251127071734-DL6X8bxz.css"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/popupModel-v20251127071734-Dg9yObOF.js"><link rel="stylesheet" crossorigin="" href="./Lucky draw_files/popupModel-v20251127071734-X5TU4CUz.css"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/httpPerson-v20251127071734-DYyLRvwQ.js"><link rel="modulepreload" as="script" crossorigin="" href="./Lucky draw_files/index-v20251127071734-BTjcocT9.js.تنزيل"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/httpLucky-v20251127071734-Cuao0MVo.js"><link rel="stylesheet" crossorigin="" href="./Lucky draw_files/layout-v20251127071734-fVEZnBd7.css"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/index-v20251127071734-RIVPabBx.js"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/dataNull-v20251127071734--kw_ojtm.js"><link rel="stylesheet" crossorigin="" href="./Lucky draw_files/dataNull-v20251127071734-DdC5ofdn.css"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/ComNotice-v20251127071734-DwGXx9M1.js"><link rel="stylesheet" crossorigin="" href="./Lucky draw_files/index-v20251127071734-CRHCmjEB.css"></head>
+
+<body>
+  
+
+  <div id="app" data-v-app=""><div data-v-e227d851="" class="page-out light notBottom"><div data-v-e227d851="" class="flex-1 right-box"><!----><div data-v-e227d851="" class="content_box"><!----><div data-v-e227d851="" class="right-box-view w100"><div data-v-e227d851="" class="lucky"><div data-v-3d6b5ac3="" class="lucky-pc"><div data-v-3d6b5ac3="" class="mobilesign"><div data-v-3d6b5ac3="" class="van-nav-bar__placeholder" style="height: 46px;"><div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom van-safe-area-top"><div class="van-nav-bar__content"><div class="van-nav-bar__left van-haptics-feedback"><img data-v-3d6b5ac3="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAYAAAAehFoBAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACVSURBVHgB7dfBDcIwDEbhP0zACmzACkxCN2AE2IwRYAU2YAPjip4itT20Tl3pfZKVQy5PvkSRAADAQmZ29LlpD4bYl/3dlVkVa2tEHxSkj/Xj6XOurj7KZmSzvU7ZEBuF2CjERtkqNuLhMGU1seWrsiK6FaJbIbqVqOiwH0cp5evHxeddXZ2UWbXph/ZgiO4EAABm/ABHduo+IFcsTAAAAABJRU5ErkJggg==" alt="" class="mobileleft"></div><div class="van-nav-bar__title van-ellipsis"><div data-v-3d6b5ac3="" class="mobilefinantitle">Lucky draw</div></div><!----></div></div></div></div><div data-v-3d6b5ac3="" class="lucky-notice"><!----></div><div data-v-3d6b5ac3="" class="lucky-con"><div data-v-3d6b5ac3="" class="lucky-left"><div data-v-3d6b5ac3="">Activity rules</div><div data-v-3d6b5ac3="">My prize</div><div data-v-3d6b5ac3="">Lottery number record</div></div><div data-v-3d6b5ac3="" class="lucky-center"><div data-v-3d6b5ac3="" class="lucky-gift"><div data-v-3d6b5ac3="" class="gift-info"><img data-v-3d6b5ac3="" src="./Lucky draw_files/90c8491c6b7b33d9291d509492a938a6.png" alt=""><div data-v-3d6b5ac3="">95 USDT</div></div><div data-v-3d6b5ac3="" class="gift-info"><img data-v-3d6b5ac3="" src="./Lucky draw_files/90c8491c6b7b33d9291d509492a938a6.png" alt=""><div data-v-3d6b5ac3="">5 USDT</div></div><div data-v-3d6b5ac3="" class="gift-info"><img data-v-3d6b5ac3="" src="./Lucky draw_files/a973a083c60a443bbfe0e16facd3612f.png" alt=""><div data-v-3d6b5ac3="">iPhone 17</div></div><div data-v-3d6b5ac3="" class="gift-info"><img data-v-3d6b5ac3="" src="./Lucky draw_files/90c8491c6b7b33d9291d509492a938a6.png" alt=""><div data-v-3d6b5ac3="">9 USDT</div></div><div data-v-3d6b5ac3="" class="gift-info"><img data-v-3d6b5ac3="" src="./Lucky draw_files/b47dd2e41f360c16613470c80a09e689.png" alt=""><div data-v-3d6b5ac3="">Audi A6</div></div><div data-v-3d6b5ac3="" class="gift-info"><img data-v-3d6b5ac3="" src="./Lucky draw_files/90c8491c6b7b33d9291d509492a938a6.png" alt=""><div data-v-3d6b5ac3="">15 USDT</div></div><div data-v-3d6b5ac3="" class="gift-info"><img data-v-3d6b5ac3="" src="./Lucky draw_files/98ded52b9f0b901b516b86e5159bb887.png" alt=""><div data-v-3d6b5ac3="">iPad</div></div><div data-v-3d6b5ac3="" class="gift-info"><img data-v-3d6b5ac3="" src="./Lucky draw_files/90c8491c6b7b33d9291d509492a938a6.png" alt=""><div data-v-3d6b5ac3="">25 USDT</div></div><div data-v-3d6b5ac3="" class="gift-info"><img data-v-3d6b5ac3="" src="./Lucky draw_files/90c8491c6b7b33d9291d509492a938a6.png" alt=""><div data-v-3d6b5ac3="">55 USDT</div></div><div data-v-3d6b5ac3="" class="gift-btn">Start</div><div data-v-3d6b5ac3="" class="gift-tips">Remaining <span>0 times</span> lottery opportunities</div></div></div><div data-v-3d6b5ac3="" class="lucky-rules"><div data-v-3d6b5ac3="" class="rules-title">Participation rules and conditions</div><div data-v-3d6b5ac3="" class="rules-desc"><p>1. During the event, when subordinates meet the recharge criteria, superiors will automatically receive the qualification for the lucky draw.</p>
+<p>2. The lucky draw opportunity is valid on the day and cannot be accumulated to the next day. Please use it promptly, as it will be reset after expiration.</p>
+<p>3. If you win a physical prize, please take a screenshot and contact the product manager with your account to claim it.</p>
+<p>4. The lucky draw is open for a limited time, with more luxurious prizes coming soon. Stay tuned!</p>
+<p>5. The final interpretation of this event belongs to EXARAI official.</p></div></div></div><!----><!----><!----><!----><!----></div></div></div></div><!----></div><div class="van-back-top__placeholder"></div></div><div data-v-10d83c99="" class="demo" style="display: none;"><div class="container" data-v-10d83c99=""><div class="row" data-v-10d83c99=""><div class="col-md-12" data-v-10d83c99=""><div class="loader" data-v-10d83c99=""><div class="box" data-v-10d83c99=""><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div></div><div class="box" data-v-10d83c99=""><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div></div><div class="box" data-v-10d83c99=""><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div></div><div class="box" data-v-10d83c99=""><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div></div></div></div></div></div><!----><div data-v-10d83c99="" class="load-ing">Loading.</div><!----></div></div>
+  <script>
+    function applyTheme() {
+      const loadingScreen = document.getElementById("loading-screen");
+      if (!loadingScreen) return;
+
+      const colorScheme = localStorage.getItem("vueuse-color-scheme");
+      if (colorScheme === "dark") {
+        loadingScreen.classList.add("dark-theme");
+      }
+    }
+
+    applyTheme();
+
+    window.onload = function () {
+      window.addEventListener("error", function (event) {
+        if (
+          event.message.indexOf("Unexpected token '<'") > -1 ||
+          event.message.indexOf(
+            "Expected a JavaScript module script but the server responded with a MIME type of 'text/html"
+          )
+        ) {
+          window.location.reload();
+        }
+      });
+    };
+  </script>
+
+
+<div class="van-back-top" id="page-back-top" style="right: 24px; bottom: 50px;"><img data-v-e227d851="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAACxLAAAsSwGlPZapAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAPKSURBVHgB7Z2xc9NQDMYVjjs22JjIxtatG5noRCfKlP+Av4wtWze2MoUJtmxsYSpTunUKUiofuR5tIr1nS8/9fne5pmljO99nyc/Ss0MEAAAAAAAAAGBQJtQg2+12yj/e8eOVvrThx2oymayoMZozgMWf0Z34/2PJJnynhmjKgAPidzRlQjMGHCl+RzMmNGGAUfyOJkx4Rslh8U/JLr4w0/emJrUBLOAJ/zgjP2e6jLSkTUEq3DnV4WvWIWrKCGDxX1M98YVzXWY60hmgQs2pPvOMJqRKQXviv6B+uOXHgtPRNSUhTQSw+FJWuCCb+Lf6OBZZ9oWuKwUpIkAFkT3/peFtu71Zn1uj5obuImFDwYRHgFN8QUY215pOLsmGrGueIRJCDSgU/1f3Cz9fy2tkI4UJYSmoUPzVA8v0nDuEpqOQCGChJF97xF8+dkKlf7PWf2QbPuo2Dc7gBhSKf1Bc/p8l2U3YDX8jTBg0Be2Jbz0hMlc2nRVUOaBLOrIMbYsYOgKksNa7+EJBJJQU/8wMFgG8R8rB0VqZLK7pOyNB+svWUZWLQSKARZC9yir+jxoNFY0EayX0RLe5d3o3QPdAa2NE9sBvVAndm60mnPK2expBJnpNQdnCPyoNPkZvEVAwCrmi/rjSdViY9RkJvURA5iHgkEPhY6geAU7xpQwwyPhb1yFVVE8kVG/yVzVAazFpxe/QdV3qui1Ub/JXS0HOQlgn/g0FwNu8q4jSvzmmx1KtyV8lAviDvKXGxBd03QuyR4I0+d9QBYoNcM5gCBe/o8CETzWa/EUpyNlETyP+Ps50VNzkdxtQ0FAR4a17m3nuP2/fe7IPNeUzWT+PmPDF29B5Tg4KxCd9j/V9a7Ij4k+pf3bnFayJq6vmPQbIUNMj/lgRLT6QA7MBeiaZesJrEFNPR80TASnnWCbBnBU8BoRPZhoTZgN0+DhY2aAhNqzNHzLiPQgvCdzHVSl1GcBO//SucKQsvbUh13mAIL1WPurL8UDqQCUH5sjhrHV29X3kDFh617/JidsAQV13VwX19P8zxSGTexcUSPqrJMcODAgGBgQDA4KBAcHAgGBgQDAwIBgYEAwMCAYGBAMDgoEBwcCAYGBAMDAgGBgQDAwIBgYEAwOCKWrKJ0cmCxyaVR1+jcJoDZg08l0CSEHBwIBgYEAwMCAYGBDMaEdB2+1WLiI8dJHeGnNDnzgwIBgYEEz0MUAujjjm9mTma69aIdQAvW9Pc18/WBOkoGBgQDAwIBgYEEyT3yd8DHrjjIM3z8h24ygAAAAAgKfBX1jJX+ul1HrWAAAAAElFTkSuQmCC" alt=""></div>  <script src="./nav-links.js"></script>
+</body></html>
