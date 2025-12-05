@@ -561,18 +561,24 @@
   </script>
 
 
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    try {
+      var backBtn = document.querySelector('.van-nav-bar__left');
+      if (backBtn && !backBtn.dataset.boundBack) {
+        backBtn.dataset.boundBack = '1';
+        backBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.href = 'Account Information.html';
+        });
+      }
+    } catch (e) {
+      console && console.warn && console.warn('back handler error', e);
+    }
+  });
+  </script>
+
   <script src="./nav-links.js"></script>
-
-<script>
-// Back button handler injected by ChatGPT
-document.addEventListener('DOMContentLoaded', function() {
-  var backBtn = document.querySelector('.van-nav-bar__left');
-  if (backBtn) {
-    backBtn.addEventListener('click', function() {
-      window.location.href = 'Account Information.html';
-    });
-  }
-});
-</script>
-
 </body></html>
