@@ -594,4 +594,21 @@
   </script>
 
   <script src="./nav-links.js"></script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    try {
+      var backBtn = document.querySelector('.van-nav-bar__left');
+      if (backBtn && !backBtn.dataset.boundBack) {
+        backBtn.dataset.boundBack = '1';
+        backBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.href = 'My Assets.html';
+        });
+      }
+    } catch (e) {}
+  });
+  </script>
+
 </body></html>
