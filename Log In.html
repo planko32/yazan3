@@ -583,76 +583,223 @@
 
   <script src="./nav-links.js"></script>
 
+  
 <script>
-window.addEventListener('load', function () {
-  function tryAttachLoginHandler() {
-    // Find a button-like element that contains 'log in'
-    var candidates = Array.from(document.querySelectorAll('button, a, div, span'));
-    var loginBtn = candidates.find(function (el) {
-      if (!el.textContent) return false;
-      var txt = el.textContent.trim().toLowerCase();
-      return txt === 'log in' || txt.indexOf('log in') !== -1;
-    });
-
-    if (!loginBtn) {
-      // Vue app might not be mounted yet, try again shortly
-      setTimeout(tryAttachLoginHandler, 600);
-      return;
+  document.addEventListener('DOMContentLoaded', function () {
+    function showTip(title, text) {
+      try {
+        var box = document.querySelector('.tips_box');
+        if (!box) return;
+        var titleEl = box.querySelector('.title');
+        var textEl = box.querySelector('.text');
+        if (titleEl) titleEl.textContent = title || '';
+        if (textEl) textEl.textContent = text || '';
+        box.style.display = 'flex';
+        setTimeout(function () {
+          box.style.display = 'none';
+        }, 4000);
+      } catch (e) {}
     }
 
-    // Attach click handler once
-    if (loginBtn.__yazanLoginAttached) return;
-    loginBtn.__yazanLoginAttached = true;
+    var phoneInput = document.querySelector('.inp-phone .inp-r input');
+    var pwdInput = document.querySelector('.user-login-box input[type="password"]');
+    var loginBtn = document.querySelector('.user-login-box .bt');
+    var rememberRow = document.querySelector('.rember-pass .l');
+    var forgotLink = document.querySelector('.rember-pass .r');
+    var signUpLink = document.querySelector('.box-tips.bottom span');
+    var serviceSpan = document.querySelector('.box-tips span:nth-of-type(1)');
+    var privacySpan = document.querySelector('.box-tips span:nth-of-type(2)');
+    var eyeBtn = document.querySelector('.eye-bt');
+    var prefixBox = document.querySelector('.prefix_box');
 
-    loginBtn.addEventListener('click', function (event) {
+    // Country code popup using Vant-style classes (reuse existing CSS)
+    if (prefixBox) {
       try {
-        event.preventDefault();
-        event.stopImmediatePropagation();
+        var overlay = document.querySelector('.country-overlay');
+        var popup = document.querySelector('.country-popup');
+        if (!overlay) {
+          overlay = document.createElement('div');
+          overlay.className = 'van-overlay country-overlay';
+          overlay.style.display = 'none';
+          document.body.appendChild(overlay);
+        }
+        if (!popup) {
+          popup = document.createElement('div');
+          popup.className = 'van-popup van-popup--bottom country-popup';
+          popup.style.display = 'none';
+          popup.innerHTML = ''
+            + '<div style="padding:12px 16px 8px;font-size:15px;font-weight:600;text-align:center;">Select country/region</div>'
+            + '<div class="country-popup-list">'
+            + '  <div data-code="+1" class="country-item">+1 United States</div>'
+            + '  <div data-code="+44" class="country-item">+44 United Kingdom</div>'
+            + '  <div data-code="+386" class="country-item">+386 Slovenia</div>'
+            + '  <div data-code="+966" class="country-item">+966 Saudi Arabia</div>'
+            + '  <div data-code="+963" class="country-item">+963 Syria</div>'
+            + '  <div data-code="+962" class="country-item">+962 Jordan</div>'
+            + '  <div data-code="+971" class="country-item">+971 UAE</div>'
+            + '</div>';
+          document.body.appendChild(popup);
+
+          // simple styling for list items only, let theme handle rest
+          var style = document.createElement('style');
+          style.textContent = ''
+            + '.country-popup-list{max-height:260px;overflow-y:auto;font-size:14px;}'
+            + '.country-item{padding:10px 18px;border-bottom:1px solid rgba(148,163,184,0.25);}'
+            + '.country-item:last-child{border-bottom:none;}';
+          document.head.appendChild(style);
+
+          overlay.addEventListener('click', function () {
+            overlay.style.display = 'none';
+            popup.style.display = 'none';
+          });
+          popup.querySelectorAll('.country-item').forEach(function (item) {
+            item.addEventListener('click', function () {
+              var code = item.getAttribute('data-code') || '';
+              try {
+                prefixBox.textContent = ' ' + code + ' ';
+              } catch (e) {}
+              overlay.style.display = 'none';
+              popup.style.display = 'none';
+            });
+          });
+        }
+        prefixBox.addEventListener('click', function () {
+          overlay.style.display = 'block';
+          popup.style.display = 'block';
+        });
       } catch (e) {}
+    }
 
-      // Find phone and password inputs by placeholder text
-      var inputs = Array.from(document.querySelectorAll('input'));
-      var phoneInput = null;
-      var passwordInput = null;
+    // Restore remembered phone
+    try {
+      var savedPhone = localStorage.getItem('demo_phone');
+      if (savedPhone && phoneInput) {
+        phoneInput.value = savedPhone;
+      }
+    } catch (e) {}
 
-      inputs.forEach(function (input) {
-        var ph = (input.getAttribute('placeholder') || '').toLowerCase();
-        if (!phoneInput && (ph.indexOf('enter phone') !== -1 || ph.indexOf('phone') !== -1)) {
-          phoneInput = input;
-        } else if (!passwordInput && ph.indexOf('password') !== -1) {
-          passwordInput = input;
+    // Remember account toggle
+    if (rememberRow) {
+      rememberRow.addEventListener('click', function () {
+        if (rememberRow.classList.contains('on')) {
+          rememberRow.classList.remove('on');
+        } else {
+          rememberRow.classList.add('on');
+        }
+        updateLoginButton();
+      });
+    }
+
+    // Toggle password visibility
+    if (eyeBtn && pwdInput) {
+      eyeBtn.addEventListener('click', function () {
+        if (pwdInput.type === 'password') {
+          pwdInput.type = 'text';
+        } else {
+          pwdInput.type = 'password';
         }
       });
+    }
 
-      if (!phoneInput || !passwordInput) {
-        alert('Cannot find phone or password fields (demo login).');
-        return;
+    function isFormValid() {
+      var phone = phoneInput ? phoneInput.value.trim() : '';
+      var pwd = pwdInput ? pwdInput.value : '';
+      if (!phone) return false;
+      if (!pwd || pwd.length < 8) return false;
+      return true;
+    }
+
+    function updateLoginButton() {
+      if (!loginBtn) return;
+      if (isFormValid()) {
+        loginBtn.classList.add('active');
+      } else {
+        loginBtn.classList.remove('active');
       }
+    }
 
-      var phone = phoneInput.value.trim();
-      var password = passwordInput.value.trim();
+    if (phoneInput) {
+      phoneInput.addEventListener('input', updateLoginButton);
+    }
+    if (pwdInput) {
+      pwdInput.addEventListener('input', updateLoginButton);
+    }
 
-      if (!phone) {
-        alert('Please enter your phone.');
-        phoneInput.focus();
-        return;
-      }
-      if (!password || password.length < 8) {
-        alert('Password must be at least 8 characters.');
-        passwordInput.focus();
-        return;
-      }
+    updateLoginButton();
 
-      try {
-        localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('loggedInPhone', phone);
-      } catch (e) {}
+    if (loginBtn) {
+      loginBtn.addEventListener('click', function () {
+        if (!isFormValid()) {
+          showTip('Login failed', 'Enter phone and a password of at least 8 characters.');
+          return;
+        }
+        var phone = phoneInput ? phoneInput.value.trim() : '';
+        var pwd = pwdInput ? pwdInput.value : '';
+        var remember = rememberRow && rememberRow.classList.contains('on');
+        try {
+          if (remember) {
+            localStorage.setItem('demo_phone', phone);
+          } else {
+            localStorage.removeItem('demo_phone');
+          }
+        } catch (e) {}
+        window.location.href = 'My Assets.html';
+      });
+    }
 
-      window.location.href = 'https://planko32.github.io/yazan3/My%20Assets.html';
-    }, true);
-  }
+    if (forgotLink) {
+      forgotLink.addEventListener('click', function () {
+        showTip('Forgot password', 'This is a demo page. Password reset is not connected yet.');
+      });
+    }
 
-  tryAttachLoginHandler();
-});
+    if (signUpLink) {
+      signUpLink.addEventListener('click', function () {
+        window.location.href = 'Sign Up.html';
+      });
+    }
+
+    if (serviceSpan) {
+      serviceSpan.addEventListener('click', function () {
+        window.location.href = 'Service Agreement.html';
+      });
+    }
+    if (privacySpan) {
+      privacySpan.addEventListener('click', function () {
+        window.location.href = 'Privacy Agreement.html';
+      });
+    }
+  });
 </script>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    try {
+      var prefixBox = document.querySelector('.prefix_box');
+      if (!prefixBox) return;
+      function openCountryPopup() {
+        // ننفّذ نفس حدث الضغط على البوكس نفسه
+        try {
+          var evt = new MouseEvent('click', { bubbles: true, cancelable: true });
+          prefixBox.dispatchEvent(evt);
+        } catch (e) {
+          prefixBox.click();
+        }
+      }
+      var wrapper = prefixBox.parentElement;
+      if (wrapper) {
+        wrapper.style.cursor = 'pointer';
+        wrapper.addEventListener('click', openCountryPopup);
+      }
+      var arrowImg = prefixBox.querySelector('img');
+      if (arrowImg) {
+        arrowImg.style.cursor = 'pointer';
+        arrowImg.addEventListener('click', openCountryPopup);
+      }
+    } catch (e) {}
+  });
+</script>
+
 </body></html>
