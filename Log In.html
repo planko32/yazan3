@@ -1,892 +1,116 @@
 
 <!DOCTYPE html>
-<!-- saved from url=(0027)https://exarai.online/login -->
-<html lang="en" class="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <!-- 1764227854320 -->
-  
-  <link rel="icon" href="https://exarai.online/favicon.ico">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="EXARAI">
-  <meta http-equiv="pragma" content="no-cache">
-  <meta http-equiv="cache-control" content="no-cache">
-  <meta http-equiv="expires" content="0">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="robots" content="noindex, nofollow">
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Log In</title>
-
-  <style>
-    .loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg,
-          #f6f7fb 0%,
-          #e8ebf1 50%,
-          #f2f2f2 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999999999;
-      overflow: hidden;
-      transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
-    }
-
-    .loading-screen.dark-theme {
-      background: linear-gradient(135deg,
-          #0c0b10 0%,
-          #17202d 50%,
-          #0e131b 100%);
-    }
-
-    .loading-screen.fade-out {
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    .loading-container {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-    }
-
-    .particles {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    .particle {
-      position: absolute;
-      width: 3px;
-      height: 3px;
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 50%;
-      animation: float 8s infinite ease-in-out;
-      box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .particle:nth-child(1) {
-      left: 5%;
-      animation-delay: 0s;
-      animation-duration: 12s;
-      width: 2px;
-      height: 2px;
-    }
-
-    .particle:nth-child(2) {
-      left: 15%;
-      animation-delay: 1.5s;
-      animation-duration: 10s;
-      width: 4px;
-      height: 4px;
-    }
-
-    .particle:nth-child(3) {
-      left: 25%;
-      animation-delay: 3s;
-      animation-duration: 14s;
-      width: 3px;
-      height: 3px;
-    }
-
-    .particle:nth-child(4) {
-      left: 35%;
-      animation-delay: 0.5s;
-      animation-duration: 9s;
-      width: 2px;
-      height: 2px;
-    }
-
-    .particle:nth-child(5) {
-      left: 45%;
-      animation-delay: 2.5s;
-      animation-duration: 11s;
-      width: 4px;
-      height: 4px;
-    }
-
-    .particle:nth-child(6) {
-      left: 55%;
-      animation-delay: 4s;
-      animation-duration: 13s;
-      width: 3px;
-      height: 3px;
-    }
-
-    .particle:nth-child(7) {
-      left: 65%;
-      animation-delay: 1s;
-      animation-duration: 8s;
-      width: 2px;
-      height: 2px;
-    }
-
-    .particle:nth-child(8) {
-      left: 75%;
-      animation-delay: 3.5s;
-      animation-duration: 15s;
-      width: 4px;
-      height: 4px;
-    }
-
-    @keyframes float {
-      0% {
-        transform: translateY(100vh) translateX(0) scale(0);
-        opacity: 0;
-      }
-
-      5% {
-        opacity: 0.3;
-      }
-
-      15% {
-        opacity: 0.8;
-        transform: translateY(80vh) translateX(10px) scale(0.5);
-      }
-
-      50% {
-        opacity: 1;
-        transform: translateY(50vh) translateX(-5px) scale(1);
-      }
-
-      85% {
-        opacity: 0.8;
-        transform: translateY(20vh) translateX(8px) scale(0.8);
-      }
-
-      95% {
-        opacity: 0.3;
-      }
-
-      100% {
-        transform: translateY(-50px) translateX(-10px) scale(0);
-        opacity: 0;
-      }
-    }
-
-    .logo-container {
-      position: relative;
-      margin-bottom: 60px;
-    }
-
-    .logo-ring {
-      position: relative;
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 30px;
-    }
-
-    .ring-inner,
-    .ring-outer {
-      position: absolute;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      animation: rotate 3s linear infinite;
-    }
-
-    .ring-inner {
-      width: 80px;
-      height: 80px;
-      top: 20px;
-      left: 20px;
-      border-top: 2px solid #00d4ff;
-      border-right: 2px solid #00d4ff;
-      animation-direction: reverse;
-      animation-duration: 2s;
-    }
-
-    .ring-outer {
-      width: 120px;
-      height: 120px;
-      top: 0;
-      left: 0;
-      border-top: 2px solid #ff6b6b;
-      border-left: 2px solid #ff6b6b;
-      animation-duration: 4s;
-    }
-
-    @keyframes rotate {
-      from {
-        transform: rotate(0deg);
-      }
-
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .logo-text {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-        "Helvetica Neue", Arial, sans-serif;
-      font-weight: bold;
-      font-size: 48px !important;
-      color: #333;
-      text-shadow: 0 0 20px rgba(0, 102, 204, 0.3);
-      font-display: block;
-      line-height: 1;
-      text-rendering: optimizeSpeed;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    .logo-text span {
-      display: inline-block;
-      animation: letterGlow 2s ease-in-out infinite;
-      transform-origin: center;
-      transform: scale(1);
-      font-size: inherit;
-      line-height: inherit;
-      width: auto;
-      height: auto;
-    }
-
-    .logo-t {
-      animation-delay: 0s;
-    }
-
-    .logo-a {
-      animation-delay: 0.2s;
-    }
-
-    .logo-r {
-      animation-delay: 0.4s;
-    }
-
-    .logo-m {
-      animation-delay: 0.6s;
-    }
-
-    .logo-space {
-      width: 20px;
-    }
-
-    .logo-ai {
-      animation-delay: 0.8s;
-      color: #0066cc;
-      text-shadow: 0 0 30px rgba(0, 102, 204, 0.5);
-    }
-
-    @keyframes letterGlow {
-
-      0%,
-      100% {
-        transform: scale(1);
-        text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-      }
-
-      50% {
-        transform: scale(1);
-        text-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
-      }
-    }
-
-    .loading-progress {
-      width: 300px;
-      text-align: center;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 4px;
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 2px;
-      overflow: hidden;
-      margin-bottom: 20px;
-      position: relative;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #0066cc, #ff6b6b, #0066cc);
-      background-size: 200% 100%;
-      border-radius: 2px;
-      animation: progressFill 4s ease-in-out forwards,
-        gradientMove 2s linear infinite;
-      width: 0%;
-    }
-
-    @keyframes progressFill {
-      0% {
-        width: 0%;
-      }
-
-      20% {
-        width: 25%;
-      }
-
-      40% {
-        width: 50%;
-      }
-
-      60% {
-        width: 75%;
-      }
-
-      80% {
-        width: 90%;
-      }
-
-      100% {
-        width: 100%;
-      }
-    }
-
-    @keyframes gradientMove {
-      0% {
-        background-position: 0% 50%;
-      }
-
-      100% {
-        background-position: 200% 50%;
-      }
-    }
-
-    .loading-text {
-      color: rgba(0, 0, 0, 0.7);
-      font-size: 16px;
-      font-weight: 300;
-      letter-spacing: 1px;
-      animation: textPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes textPulse {
-
-      0%,
-      100% {
-        opacity: 0.6;
-      }
-
-      50% {
-        opacity: 1;
-      }
-    }
-
-    .tech-lines {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-
-    .index-line {
-      position: absolute;
-      background: linear-gradient(90deg,
-          transparent,
-          rgba(0, 102, 204, 0.3),
-          transparent);
-      height: 1px;
-      animation: lineMove 4s linear infinite;
-    }
-
-    .line-1 {
-      top: 20%;
-      width: 200px;
-      left: -200px;
-      animation-delay: 0s;
-    }
-
-    .line-2 {
-      top: 50%;
-      width: 300px;
-      right: -300px;
-      animation-delay: 1s;
-      animation-direction: reverse;
-    }
-
-    .line-3 {
-      top: 80%;
-      width: 150px;
-      left: -150px;
-      animation-delay: 2s;
-    }
-
-    @keyframes lineMove {
-      0% {
-        transform: translateX(0);
-      }
-
-      100% {
-        transform: translateX(calc(100vw + 200px));
-      }
-    }
-
-    .loading-screen.dark-theme .particle {
-      background: rgba(255, 255, 255, 0.7);
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-    }
-
-    .loading-screen.dark-theme .logo-text {
-      color: #fff;
-      text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-    }
-
-    .loading-screen.dark-theme .logo-ai {
-      color: #00d4ff;
-      text-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
-    }
-
-    .loading-screen.dark-theme .progress-bar {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .loading-screen.dark-theme .progress-fill {
-      background: linear-gradient(90deg, #00d4ff, #ff6b6b, #00d4ff);
-    }
-
-    .loading-screen.dark-theme .loading-text {
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .loading-screen.dark-theme .index-line {
-      background: linear-gradient(90deg,
-          transparent,
-          rgba(0, 212, 255, 0.3),
-          transparent);
-    }
-
-    .loading-screen.dark-theme .ring-inner {
-      border-top: 2px solid #00d4ff;
-      border-right: 2px solid #00d4ff;
-    }
-
-    .loading-screen.dark-theme .ring-outer {
-      border-top: 2px solid #ff6b6b;
-      border-left: 2px solid #ff6b6b;
-    }
-
-    @media (max-width: 768px) {
-      .logo-text {
-        font-size: 36px;
-      }
-
-      .logo-ring {
-        width: 100px;
-        height: 100px;
-      }
-
-      .ring-inner {
-        width: 60px;
-        height: 60px;
-        top: 20px;
-        left: 20px;
-      }
-
-      .loading-progress {
-        width: 250px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .logo-ring {
-        width: 80px;
-        height: 80px;
-      }
-
-      .ring-inner {
-        width: 50px;
-        height: 50px;
-        top: 15px;
-        left: 15px;
-      }
-
-      .ring-outer {
-        width: 80px;
-        height: 80px;
-      }
-
-      .logo-text {
-        font-size: 28px;
-      }
-    }
-  </style>
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/crypto-js-v20251127071734-BXdhhA8o.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/highlight-v20251127071734-sLdeLc1g.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/vendor-v20251127071734-DckFzIAx.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/vue-i18n-v20251127071734-D70_DMns.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/vant-ui-v20251127071734-BYeqPL--.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/pinia-v20251127071734-C-HAYjGE.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/dayjs-v20251127071734-BmMYmPdv.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/element-plus-v20251127071734-DnGA8OQj.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/vue-router-v20251127071734-VRuCLJ8t.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/axios-v20251127071734-CCIbOCoD.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/qrcode-v20251127071734-KwKXGQm2.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/vue-qr-v20251127071734-nGERO--V.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/vueuse-v20251127071734-CMX7PJJ_.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/fingerprint-v20251127071734-DONcYrhz.js">
-  <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/bignumber-v20251127071734-yEAtxT-w.js">
-  <link rel="stylesheet" crossorigin="" href="./Log In_files/highlight-v20251127071734-ZgkIHsf0.css">
-  <link rel="stylesheet" crossorigin="" href="./Log In_files/vant-ui-v20251127071734-C767WeoM.css">
-  <link rel="stylesheet" crossorigin="" href="./Log In_files/element-plus-v20251127071734-xGTMDgcT.css">
-  <link rel="stylesheet" crossorigin="" href="./Log In_files/index-v20251127071734-Ccv9kcYE.css">
-<link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/layout-v20251127071734-CfUanefy.js"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/logo-h5-v20251127071734-D7ecjlYj.js"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/level-icon-v20251127071734-BIzRXkxP.js"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/popupSlot-v20251127071734-CKpjmN2i.js"><link rel="stylesheet" crossorigin="" href="./Log In_files/popupSlot-v20251127071734-DL6X8bxz.css"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/popupModel-v20251127071734-Dg9yObOF.js"><link rel="stylesheet" crossorigin="" href="./Log In_files/popupModel-v20251127071734-X5TU4CUz.css"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/httpPerson-v20251127071734-DYyLRvwQ.js"><link rel="modulepreload" as="script" crossorigin="" href="./Log In_files/index-v20251127071734-BTjcocT9.js.تنزيل"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/httpLucky-v20251127071734-Cuao0MVo.js"><link rel="stylesheet" crossorigin="" href="./Log In_files/layout-v20251127071734-fVEZnBd7.css"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/login-v20251127071734-Chq8mK3W.js"><link rel="stylesheet" crossorigin="" href="./Log In_files/login-v20251127071734-CsKYi361.css"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/login-v20251127071734-LpXMkb7a.js"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/arrow-down-on-v20251127071734-DhgQg1l2.js"><link rel="stylesheet" crossorigin="" href="./Log In_files/arrow-down-on-v20251127071734--jBe8PBw.css"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/left-arrow-h5-v20251127071734-BXGFAWNZ.js"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/customer-service-v20251127071734-BxKDO4_L.js"><link rel="modulepreload" as="script" crossorigin="" href="https://exarai.online/js/eye-close-v20251127071734-s3XvMbEc.js"><link rel="stylesheet" crossorigin="" href="./Log In_files/login-v20251127071734-DY96_3E1.css"></head>
-
+  <link rel="stylesheet" href="./Log In_files/style.css" />
+</head>
 <body>
-  
+  <div class="login-shell">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-logo">
+          <div class="hero-logo-icon">E</div>
+          <div class="hero-logo-text">EXARAI</div>
+        </div>
+        <h1 class="hero-title">Unleash your creativity with EXARAI</h1>
+        <p class="hero-subtitle">Secure sign in to explore the future of AI.</p>
+      </div>
+    </section>
 
-  <div id="app" data-v-app=""><div data-v-e227d851="" class="page-out light notBottom"><div data-v-e227d851="" class="flex-1 right-box"><!----><div data-v-e227d851="" class="content_box"><!----><div data-v-e227d851="" class="right-box-view w100"><div data-v-8b57a58a="" data-v-e227d851="" class="login-page-out"><div data-v-8b57a58a="" class="login-page-tips flex-center"><img data-v-8b57a58a="" src="data:image/png;base64,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" alt=""> Please confirm that you are using the official website https://exarai.online/home</div><div data-v-8b57a58a="" class="login-page-wrap"><div data-v-8b57a58a="" class="left-box"></div><div data-v-8b57a58a="" class="right-box"><div data-v-8b57a58a="" class="right-box-content"><div data-v-5bbcb74e="" data-v-8b57a58a="" class="login-box"><div data-v-5bbcb74e="" class="mobilesign not-bg"><div data-v-5bbcb74e="" class="van-nav-bar__placeholder" style="height: 46px;"><div class="van-nav-bar van-nav-bar--fixed van-hairline--bottom van-safe-area-top"><div class="van-nav-bar__content"><div class="van-nav-bar__left van-haptics-feedback"><img data-v-5bbcb74e="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAACxLAAAsSwGlPZapAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAKASURBVHgB7Z3LTcNAEIYnFEADFAA0EBqAM4J7QgGUwBlBARSAyJ0UgFIAaQAKIA1AAWGGOCKAeGRtdl7/J60sgU//57Xj7OyECAAAAAAAAAAAAAAAAAD4d3oUmPl83ufDPo/d5k8zHne9Xm9CRggrgMM/48Pwm3+PeZyziBdSJqQADv+SD0e/nDZlAQNSZoOC8cfwhT6fOyRlQglYI/wlB6RMmFtQQfhv8G1omxQJMQNKw7eAewEtw5+RMq4FdHDl35MybgV0EL5c/VekjMuHcAfhywvYgB/AD6SMOwGRwhdcCYgWvuBGQMTwBRcCooYvmBcQOXzBtIDo4QtmBWQIXzApIEv4gjkBmcIXTAnIFr5gRkDG8AUTArKGL6gLyBy+oCoge/iCmgCEv0BFAMJ/p7oAhP+RqgIQ/leqrQk3tZoI/xNVZkBTpTyickKGL9SaAcdUTtjwhVoCtqiM0OEL1uuCnpsRlloCnqgMmTkjfoaUziDz1BIwpnJCS6gigO/hUz5MqZywEmo+A055PFI5ISXUfhPepMX7wA6VI0W18slIvbS8CzS+C4KEFbS+DYWEBs31AEgg/RWx9BIsrAmnlmClKiKtBEt1QSklWKuMSyfBYm1oKglWq6PTSLC8PyCFBOs7ZMJL8LBHLLQEL7skw0rwtE84pARvO+XDSfDYKyKUBK/dUrqScKjdutJlvyAOTWqFpOVk2zXmE1LGbcOmjiTskTKuW5Z1IEG9wsJ9076WEtTLHkO0rWwhobRksjPCdM4tlHBDyoRqXbymhOumZFKVcM27VyTc/nCahH9BBsjwAw6yL235aUc2ekwsXPkAAAAAAAAAAAAAAAAAQEVeATezWscW2iRgAAAAAElFTkSuQmCC" alt="" class="mobileleft"></div><div class="van-nav-bar__title van-ellipsis"><div data-v-5bbcb74e="" class="mobiletitle"></div></div><div class="van-nav-bar__right van-haptics-feedback"><img data-v-5bbcb74e="" class="lang" src="./Log In_files/customer-service-CmHPfbWz.png" alt=""></div></div></div></div></div><div data-v-5bbcb74e="" class="logo_bg"><img data-v-5bbcb74e="" src="./Log In_files/login-bg-h5-CVRiyHgB.png" alt=""></div><div data-v-5bbcb74e="" class="user-login-box"><div data-v-5bbcb74e="" class="user-login-title user-login-title-h5">Log In</div><div data-v-5bbcb74e="" class="box-li"><div data-v-5bbcb74e="" class="inp-title">Phone</div><div data-v-5bbcb74e="" class="inp flex-align inp-phone"><div data-v-5bbcb74e="" class="inp-l flex-align"><div data-v-5bbcb74e="" class="prefix_box"> +386 <img data-v-5bbcb74e="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAACxLAAAsSwGlPZapAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAKxSURBVHgB7ZmxbhNBEIbnogghBBQUCAkkSuAFeACgD0pv5QEgPQp1EkgLSR1wD1iiBApKRG+ZmijQUAQJCQlh/l+MlZO9u97d27MdZT7p11m+29uZ8czs3lnEMAzDMAzDMAzDMAzDMCYYDocXoKs8yoIzslVKoDd7An2GBqpusQkKoj9Qt2bnQG0P2loFbshfuwe5bnAEbVVV9VoWANi6isMG5MrQA2gFtv50jV0SP4/F7Ty5CDG66zJn1IZtcTtP6MOab3woALdkOg9hwO48eoOW5x5tiLh81XciVAIDiYdp1kGaHcgM0Lruij9DJ4BtN1zfhzIgxRka8gaG3ZWW0Tl8vclH33ciFIBXkgb7wl6bfUHvzbRPLbkXvhOVhCdkmt2WdN5Bj3ydNxXtMU+hnAzrw477vpOhDGDddCQQvQD3oF6J/YLegymf4/x+yHkSzICaEVxGNiQd7heYCe8lA613/vI5q8wm5n057aKoAKgxXBZ3Ja35jHgOY56lDNB6j1nixmHzfoD5+jEXRwdAjaLzbEI3JZ2ovtC03uW/89ErWFIARsBIlsNa+sjwfiFnfa/Bet9OHJMXANKgL9D5zfG+gPtxtclZ4kQi691FdgBIqb4wq3p30SgApGFf6OlxRdJJrncXjQMwIqMvLENX9PM36E/80Lx6d1EsAARBYBrHbIXPQpfleCNG539AvyLGZte7i6IBIBF9gc8MlzznGIQjzzmmOpfRT1KQ4gEggeWMaX8tMPQv9FWPdYrUu4slaQEaCt2RyeeIczLdnvNj3+1Li+8alqVFYPQWsoEpvZ4w35na56L1PjfYF6AP0CH0e4oO9dqcx/DFRV9bf4wIwNtFfO1eDDi3E3B+5yT8+dIYONmBvtQc/657iNMFnL5OiWEYhmEYhmEYhmEYhmHMjH8eI6vuxIRf9AAAAABJRU5ErkJggg==" alt=""></div><div data-v-1e22260f="" data-v-5bbcb74e="" class=""><!----><!----></div></div><div data-v-5bbcb74e="" class="inp-r"><input data-v-5bbcb74e="" type="text" placeholder="Enter phone"></div></div></div><div data-v-5bbcb74e="" class="box-li"><div data-v-5bbcb74e="" class="inp-title">Password</div><div data-v-5bbcb74e="" class="inp"><input data-v-5bbcb74e="" type="password" placeholder="Your password must be at least 8 characters"><div data-v-5bbcb74e="" class="eye-bt"><img data-v-5bbcb74e="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAAA8CAYAAADfYhweAAAACXBIWXMAACxLAAAsSwGlPZapAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAQfSURBVHgB7ZtPVtswEMbH2acXoAeAC4Q9Zd8/e+gFwr70AMA+9ADAvqX7PPbQA0D35ALkAOl8ZJwaxbZG9kg2ab/3VAqJpfFPI1kajYn+64Uy7RcXi8WQf+xwmWdZdk8tJfW95bLN5Q2XofOVOZcZlycu99zmnBLIC0QMP+LyufBnGHrARs5IKalnn8sulxGXLQoTOuGBy5TLbSxAGiBf6SWMXCoofD1uHkBHZCuAmXL7P8hQtUD4ZtCLNzVfqYTC1wLimJbDIabQ9sQKzMDz+Y7ncwC7EnCu7iiN0PYZ23DD5SO1lA/IE+kMWoMiE++hsg4LFcH4OrJStUD4ptDLmomzL1ByW67ZliNqIM2kCtqXpJsLSueUwDosFfw09A2Z0F7uk6fk9sBb9rUXhCzMXrOnQOdsz8T3JTUQ6F+AEgQE2nQowUCgTYbinVQh2Yes9MonWmhctYjzApGe/NnyhvoI5axsAafZy1zR8oYsXL+uDoDJd7BDaXOX4mrNHh8QwBjVVSDfaw2lxgasIeDe6rVEoO7YloP8l6zGECx9xyUfJYci9Re91VonbMsF/pPVNB687Y8NRdpAJzXap3j0AXNa1aR65bnYYpKsCx1Uits45x/eFWcDneKfNSDyONIY2TWUC7LVDu59bcggnkBh47TL4XNN/iBWiGYDp4Emwd/OPIV1QrbacofMJ2qmTqBIAMs0VOkC2abm6spTTCfYFRA2AmO97XjsAsoDGS79B44hFkoKhetFfUGTcZ2KQIZkJ9zI2io3oqe0PlrNVQRiHZco7bVIUHrvIbVK9EhupCIQM8qi2hswhmIGqwjE+jTd+8QyhHJJRk+aqB7ihh7L1LfI26BQqenji5aTtGpd0yco7kp1SrZSxy36AiU2kJFsGFXqA5SBU5n2tD9EQdGtjqHMyiJm1tGokaRlqdUhlElVTNU68AKpDpsdO1KeEM742r2qmOox2WscmsSS2FOejyIGNYZYR6OgsaQ8hQSBUkCZ5J4VelBlKWQNfpeJ3KuIwwc5r4f5LyFHmbGEXkOQB8Y/yt+Q4TyJeGya1xF2lFmo4JrSK/ZZMuo4zJw0dVV+iJzVnFF6xYQyLEsPV+WHSJZwjNMyn6KFI7OKXPnQHLNY56o+JTsMa5JjttFQmuaYbSyURkDECCSwnBL1IzvZCkpjIGJEinVKmaJBUT1lqoTKsCEi+9QEn+I9fchI0jvfKK23mHuKGZCCMVjEYcJNBcYKynusTVoNmTJhESfD6AvZR9/KhMj+qMSO0OHznApi7iGuxGP2yT6t8paWQac7T/taT8HO+zg6kFxyRoNE3He0jMaFRuSwE84TZKZZwGuqSijYXZ8nA+Jq8ffFaBgJly17kTkPDTxmLd/TVUDZ8y3rN06AwuUXl99OWb0I8AezVQKxR7CjOAAAAABJRU5ErkJggg==" alt=""></div></div></div><div data-v-5bbcb74e="" class="rember-pass"><div data-v-5bbcb74e="" class="l flex-align"><img data-v-5bbcb74e="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABBCAYAAABhNaJ7AAAACXBIWXMAACxLAAAsSwGlPZapAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMgSURBVHgB7Zu7dtNAEIZHbpwqquKKVJiGUKWLOypSQccb8FY8gTuooILKqaAKFaEhVHYlV3Zl5pdmfRRlxpZyctFevnM2a0urPZp/Z0cba4coETcZdWSz2Qy5OuZyKAXfczmd15oOpdwHaymOolYv5dycyyLLsjV1oJUAbDQMfs7lBVVG9xkIcs3lksX4t6/xTgHY8FOuJnR/I/nYQIwZC/HLaqAKwIbDld9Q5eohACGmLETRPHFLADZ+xNU76r+rdwUifGIR5vWDNwSQkX9P7Yx3gQkdruhmoFrSw+DuywXYvFHv45YnNAX4QLbxMA7B5Qo1d/JQRt4J8dwjLs+4vNrRFPc+dV+yWgcnXJ0bF/3gctH1EfNUsC0YxDOyhfjGtvzEh0Ht4MRojCj63RfjAbyTy1f+eGE02dpaCiDPec318Sy1Ouk9fO8zqry3yZBtxlTZesCJ0Ye3xteADZr3jvHHCaA97y/7Fujugkzdv8qpSgBZ22vuv3cZ6RF/lGM5bIcHjIyL5hQO18bxYwhwpJxYs+ssKBBkKmtx4BACaCuogsLDFCBv2dh3tCldxgAtAMbiAfmgQ2PfWWkHY5oCZgyIGksA71eACqpN1mMwFg5iF2CYYgBFThKAIicJQJGTBKDISQJQ5CQBKHKSABQ5SQCKnCQAhfkLcFvWsQuwsqZAaFvkgGpTigGkvwcM8ZdizabloENj3znQDkKAZdvGnqO+BYcA2ltTbdeI75hTIBYPUN+CWwIMZbtpEMg+Ys0D5hDA3EFF4WBN6cVANhJqXjCmcNAGs4Dt7jH4W7tINlF6jeRAaFuBS893Amg7KWG8tYPcJ86M42UeUSkAuwLU0P4pOmUFrQ56D987BlAb/cJllNVXgjOjnwl3dC6u5AWYulxekz36213wzZQZ5Avtiv5wG3jLopl89NTIYxv3Ppbail8Y/Y/uS6Z0AhHajDamTNGoHztpCgu2EbXPUsV9TutpAFba3FtqJ4JPwPjPO9PmHB09wQcwbb9oCSD7UmcRQRFIfBUCU3LmMsQ0uiRPv6QquPRdDIwyFnZXbZKn/wO97ul0fb7q4AAAAABJRU5ErkJggg==" alt=""> Remember account</div><div data-v-5bbcb74e="" class="r">Forgot Password?</div></div><div data-v-5bbcb74e="" class="bt flex-center">Log In</div><div data-v-5bbcb74e="" class="box-tips flex-align">By logging in, I agree to the TARM<span data-v-5bbcb74e="">Service Agreement</span>and <span data-v-5bbcb74e="">Privacy Policy</span></div><div data-v-5bbcb74e="" class="box-tips bottom flex-align">Don't have an account yet?<span data-v-5bbcb74e="">Sign Up</span></div></div><!----></div></div></div></div></div></div></div><!----></div><div class="van-back-top__placeholder"></div></div><div data-v-10d83c99="" class="demo" style="display: none;"><div class="container" data-v-10d83c99=""><div class="row" data-v-10d83c99=""><div class="col-md-12" data-v-10d83c99=""><div class="loader" data-v-10d83c99=""><div class="box" data-v-10d83c99=""><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div></div><div class="box" data-v-10d83c99=""><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div></div><div class="box" data-v-10d83c99=""><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div></div><div class="box" data-v-10d83c99=""><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div><div data-v-10d83c99=""></div></div></div></div></div></div><!----><div data-v-10d83c99="" class="load-ing">Loading.</div><!----></div></div>
-  <script>
-    function applyTheme() {
-      const loadingScreen = document.getElementById("loading-screen");
-      if (!loadingScreen) return;
+    <section class="card">
+      <header class="card-header">
+        <h2 class="card-title">Log In</h2>
+        <p class="card-caption">Sign in with your mobile phone number.</p>
+      </header>
 
-      const colorScheme = localStorage.getItem("vueuse-color-scheme");
-      if (colorScheme === "dark") {
-        loadingScreen.classList.add("dark-theme");
-      }
-    }
+      <form>
+        <div class="field-group">
+          <label class="field-label">Phone</label>
+          <div class="field-row">
+            <div class="country-select">
+              <button id="countryButton" class="country-button" type="button">
+                <span id="countryLabel">+386</span>
+                <div class="country-arrow">⌄</div>
+              </button>
+            </div>
+            <div class="input-wrapper">
+              <input
+                id="phoneInput"
+                class="input"
+                type="tel"
+                placeholder="Enter phone"
+                autocomplete="tel"
+              />
+            </div>
+          </div>
+        </div>
 
-    applyTheme();
+        <div class="field-group">
+          <label class="field-label">Password</label>
+          <div class="password-row">
+            <input
+              id="passwordInput"
+              class="input"
+              type="password"
+              placeholder="Your password must be at least 8 characters"
+              autocomplete="current-password"
+              minlength="8"
+            />
+            <span id="eyeToggle" class="eye-toggle" aria-label="Toggle password visibility">👁</span>
+          </div>
+        </div>
 
-    window.onload = function () {
-      window.addEventListener("error", function (event) {
-        if (
-          event.message.indexOf("Unexpected token '<'") > -1 ||
-          event.message.indexOf(
-            "Expected a JavaScript module script but the server responded with a MIME type of 'text/html"
-          )
-        ) {
-          window.location.reload();
-        }
-      });
-    };
-  </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a8f46af2e72cb4b',t:'MTc2NDg5Mjk2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+        <div class="meta-row">
+          <div class="meta-left">
+            <button id="rememberBox" type="button" class="checkbox">
+              <span id="rememberCheckbox" class="checkbox-icon"></span>
+            </button>
+            <span>Remember account</span>
+          </div>
+          <a href="#" class="meta-link">Forgot Password?</a>
+        </div>
 
-<div data-v-b49d5a87="" data-v-5bbcb74e="" class="tips_box"><div data-v-b49d5a87="" class="icon"><img data-v-b49d5a87="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAKaSURBVHgB7ZqNjZswGIafdoJsUG/QbnDuBtngGOE6QdIJLp0gbNBukG5w7QRhg9wGLRZBcj5wAv4BI/FIn0QCBj5e268NhpWVlTn5wDToOrZ1fKpjU8ffOn7X8YuFY5I61/HPEWbfMwvlFXdiMl5ZGEfcir059p1YCDu6N3+gaXstqo49C1Sy4PaGLzQdjAt9PcYusyVjZIfyMqDMlm413pAhsmoeRpQ9iLJ7MkNxq975+t9QjGJ2Vb2QmYoltwo8M54XcY4jmaDotiFfpIVoMqAkXL0WTWbeqIl/QycyUlHagiKcL+Kcb8xEQbpOQdrGED+Nzlj1zP6fNA/i0bGz28aO8cZcWscPmQfuPa4RBYWfqdudx5DOaDYVS/xsYWyChoKJzV/hb+o+CcpyyW2jxN/UfRPUTGT+OvBCvgnKsslUPBNm6iEJJjf/gvDGHpKgIan5h6pnCE3QyzY+8pgdtwn9qKNiet6v124xyQWrqAibqduEKmjYiPsJNv8Sf1uQxEjQUBDJ/BX+pt5HrATlubxtoySeeoY98QbOmkDz16TxnS3xXuwGqRjDFlKj8BShIFIjngAv80+lnqJ5WAfinXO0+RekmUUrIvuXhXxhfFfFk7gJRRzkBxbvrr0HqeLdHtU+MOb3czkbiN1x2W3xYu+QY1G72vwhHuZc32nGsGZM+Y2449nK2t7gqP7mzxTtbwoKHLXDVvBdFMryI6QDJX5X7Yasona1/MxyeLK27zYtaZya/JEd2PHewVocbHqkWGPHFGi6AxP9qJBUsX0qinwwqvUtNOqsC3CtVSvpnx5VzPO6wkbR/7BN2/tKt7N00qdkriEXGg1G05135RQnHrS5ocspTZ1/up5sbn+saKpjuyRzZWUlY/4DEjXuoOsUNuQAAAAASUVORK5CYII=" alt=""></div><div data-v-b49d5a87="" class="content"><div data-v-b49d5a87="" class="title"></div><div data-v-b49d5a87="" class="text"></div></div><div data-v-b49d5a87="" class="close"><i data-v-b49d5a87="" class="el-icon"><svg data-v-b49d5a87="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"></path></svg></i></div></div><div class="van-back-top" id="page-back-top" style="right: 24px; bottom: 50px;"><img data-v-e227d851="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAACxLAAAsSwGlPZapAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAPKSURBVHgB7Z2xc9NQDMYVjjs22JjIxtatG5noRCfKlP+Av4wtWze2MoUJtmxsYSpTunUKUiofuR5tIr1nS8/9fne5pmljO99nyc/Ss0MEAAAAAAAAAGBQJtQg2+12yj/e8eOVvrThx2oymayoMZozgMWf0Z34/2PJJnynhmjKgAPidzRlQjMGHCl+RzMmNGGAUfyOJkx4Rslh8U/JLr4w0/emJrUBLOAJ/zgjP2e6jLSkTUEq3DnV4WvWIWrKCGDxX1M98YVzXWY60hmgQs2pPvOMJqRKQXviv6B+uOXHgtPRNSUhTQSw+FJWuCCb+Lf6OBZZ9oWuKwUpIkAFkT3/peFtu71Zn1uj5obuImFDwYRHgFN8QUY215pOLsmGrGueIRJCDSgU/1f3Cz9fy2tkI4UJYSmoUPzVA8v0nDuEpqOQCGChJF97xF8+dkKlf7PWf2QbPuo2Dc7gBhSKf1Bc/p8l2U3YDX8jTBg0Be2Jbz0hMlc2nRVUOaBLOrIMbYsYOgKksNa7+EJBJJQU/8wMFgG8R8rB0VqZLK7pOyNB+svWUZWLQSKARZC9yir+jxoNFY0EayX0RLe5d3o3QPdAa2NE9sBvVAndm60mnPK2expBJnpNQdnCPyoNPkZvEVAwCrmi/rjSdViY9RkJvURA5iHgkEPhY6geAU7xpQwwyPhb1yFVVE8kVG/yVzVAazFpxe/QdV3qui1Ub/JXS0HOQlgn/g0FwNu8q4jSvzmmx1KtyV8lAviDvKXGxBd03QuyR4I0+d9QBYoNcM5gCBe/o8CETzWa/EUpyNlETyP+Ps50VNzkdxtQ0FAR4a17m3nuP2/fe7IPNeUzWT+PmPDF29B5Tg4KxCd9j/V9a7Ij4k+pf3bnFayJq6vmPQbIUNMj/lgRLT6QA7MBeiaZesJrEFNPR80TASnnWCbBnBU8BoRPZhoTZgN0+DhY2aAhNqzNHzLiPQgvCdzHVSl1GcBO//SucKQsvbUh13mAIL1WPurL8UDqQCUH5sjhrHV29X3kDFh617/JidsAQV13VwX19P8zxSGTexcUSPqrJMcODAgGBgQDA4KBAcHAgGBgQDAwIBgYEAwMCAYGBAMDgoEBwcCAYGBAMDAgGBgQDAwIBgYEAwOCKWrKJ0cmCxyaVR1+jcJoDZg08l0CSEHBwIBgYEAwMCAYGBDMaEdB2+1WLiI8dJHeGnNDnzgwIBgYEEz0MUAujjjm9mTma69aIdQAvW9Pc18/WBOkoGBgQDAwIBgYEEyT3yd8DHrjjIM3z8h24ygAAAAAgKfBX1jJX+ul1HrWAAAAAElFTkSuQmCC" alt=""></div>  
-  <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    try {
-      var backBtn = document.querySelector('.van-nav-bar__left');
-      if (backBtn && !backBtn.dataset.boundBack) {
-        backBtn.dataset.boundBack = '1';
-        backBtn.addEventListener('click', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          window.location.href = 'Account Information.html';
-        });
-      }
-    } catch (e) {
-      console && console.warn && console.warn('back handler error', e);
-    }
-  });
-  </script>
+        <button id="loginButton" class="login-btn disabled" type="submit" disabled>
+          Log In
+        </button>
 
-  <script src="./nav-links.js"></script>
+        <p class="terms">
+          By logging in, you agree to the EXARAI <a href="#">Service Agreement</a> and
+          <a href="#">Privacy Policy</a>.
+        </p>
 
-  <style>
-    /* Custom login behavior styles */
-    .custom-login-disabled {
-      opacity: 0.4;
-      pointer-events: none;
-      cursor: default;
-    }
+        <p class="signup-row">
+          Don’t have an account yet?
+          <a href="#">Sign Up</a>
+        </p>
+      </form>
+    </section>
+  </div>
 
-    .custom-area-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999999999;
-    }
+  <div id="countryModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Select area code</div>
+        <button id="modalClose" class="modal-close" type="button">✕</button>
+      </div>
+      <div class="modal-search">
+        <input
+          id="countrySearch"
+          class="modal-search-input"
+          type="text"
+          placeholder="Please search for the international dialing code"
+        />
+      </div>
+      <div class="modal-body">
+        <div id="countryList" class="country-list"></div>
+      </div>
+    </div>
+  </div>
 
-    .custom-area-panel {
-      width: 90%;
-      max-width: 420px;
-      max-height: 80vh;
-      background: #111826;
-      border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-      padding: 16px 16px 10px;
-      color: #f9fafb;
-      display: flex;
-      flex-direction: column;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-    }
-
-    .custom-area-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    .custom-area-close {
-      border: none;
-      background: transparent;
-      color: #9ca3af;
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    .custom-area-search {
-      margin-bottom: 10px;
-    }
-
-    .custom-area-search input {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 14px;
-      outline: none;
-    }
-
-    .custom-area-list {
-      flex: 1;
-      overflow-y: auto;
-      padding-right: 4px;
-      margin: 0;
-      list-style: none;
-    }
-
-    .custom-area-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 6px 4px;
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .custom-area-item span {
-      display: inline-block;
-    }
-
-    .custom-area-item:hover {
-      background: #111827;
-    }
-
-    .custom-area-code {
-      color: #9ca3af;
-      margin-left: 8px;
-    }
-  </style>
-
-  <script>
-    (function () {
-      var targetLoginUrl = "https://planko32.github.io/My%20Assets.html";
-
-      function waitForElements(selector, timeoutMs, callback) {
-        var start = Date.now();
-        var timer = setInterval(function () {
-          var nodes = document.querySelectorAll(selector);
-          if (nodes && nodes.length) {
-            clearInterval(timer);
-            callback(Array.prototype.slice.call(nodes));
-          } else if (Date.now() - start > timeoutMs) {
-            clearInterval(timer);
-          }
-        }, 200);
-      }
-
-      function createAreaOverlay(onSelect) {
-        var countries = [
-          { name: "Slovenia", code: "+386" },
-          { name: "Panama", code: "+507" },
-          { name: "Syria", code: "+963" },
-          { name: "Republic of Lebanon", code: "+961" },
-          { name: "Cyprus", code: "+357" },
-          { name: "Saudi Arabia", code: "+966" },
-          { name: "United Arab Emirates", code: "+971" },
-          { name: "Qatar", code: "+974" },
-          { name: "Kuwait", code: "+965" },
-          { name: "Bahrain", code: "+973" },
-          { name: "Jordan", code: "+962" },
-          { name: "Iraq", code: "+964" },
-          { name: "Turkey", code: "+90" },
-          { name: "United States", code: "+1" },
-          { name: "United Kingdom", code: "+44" },
-          { name: "Germany", code: "+49" },
-          { name: "France", code: "+33" },
-          { name: "Spain", code: "+34" },
-          { name: "Italy", code: "+39" },
-          { name: "Canada", code: "+1" },
-          { name: "Russia", code: "+7" },
-          { name: "China", code: "+86" },
-          { name: "Japan", code: "+81" },
-          { name: "South Korea", code: "+82" },
-          { name: "India", code: "+91" },
-          { name: "Pakistan", code: "+92" },
-          { name: "Afghanistan", code: "+93" },
-          { name: "Egypt", code: "+20" },
-          { name: "Morocco", code: "+212" },
-          { name: "Algeria", code: "+213" },
-          { name: "Tunisia", code: "+216" },
-          { name: "Libya", code: "+218" }
-        ];
-
-        var overlay = document.createElement("div");
-        overlay.className = "custom-area-overlay";
-
-        var panel = document.createElement("div");
-        panel.className = "custom-area-panel";
-
-        var header = document.createElement("div");
-        header.className = "custom-area-header";
-        header.innerHTML = "<span>Select area code</span>";
-
-        var closeBtn = document.createElement("button");
-        closeBtn.className = "custom-area-close";
-        closeBtn.type = "button";
-        closeBtn.textContent = "×";
-        closeBtn.addEventListener("click", function () {
-          document.body.removeChild(overlay);
-        });
-
-        header.appendChild(closeBtn);
-
-        var searchWrap = document.createElement("div");
-        searchWrap.className = "custom-area-search";
-        var searchInput = document.createElement("input");
-        searchInput.type = "text";
-        searchInput.placeholder = "Search country or code";
-        searchWrap.appendChild(searchInput);
-
-        var list = document.createElement("ul");
-        list.className = "custom-area-list";
-
-        function render(filtered) {
-          list.innerHTML = "";
-          filtered.forEach(function (item) {
-            var li = document.createElement("li");
-            li.className = "custom-area-item";
-            var left = document.createElement("span");
-            left.textContent = item.name;
-            var right = document.createElement("span");
-            right.className = "custom-area-code";
-            right.textContent = item.code;
-            li.appendChild(left);
-            li.appendChild(right);
-            li.addEventListener("click", function () {
-              onSelect(item);
-              document.body.removeChild(overlay);
-            });
-            list.appendChild(li);
-          });
-        }
-
-        render(countries);
-
-        searchInput.addEventListener("input", function () {
-          var value = searchInput.value.toLowerCase();
-          var filtered = countries.filter(function (item) {
-            return (
-              item.name.toLowerCase().indexOf(value) !== -1 ||
-              item.code.indexOf(value) !== -1
-            );
-          });
-          render(filtered);
-        });
-
-        panel.appendChild(header);
-        panel.appendChild(searchWrap);
-        panel.appendChild(list);
-        overlay.appendChild(panel);
-
-        document.body.appendChild(overlay);
-      }
-
-      function setupCustomLogin() {
-        var selectedCountryCode = "+386";
-
-        var phoneInput = document.querySelector('input[placeholder="Enter phone"]') ||
-          document.querySelector('input[type="tel"]');
-
-        var passwordInput = document.querySelector('input[type="password"]');
-        var loginButton = null;
-
-        var possibleButtons = document.querySelectorAll("button, .van-button");
-        Array.prototype.forEach.call(possibleButtons, function (btn) {
-          if (!loginButton) {
-            var text = (btn.textContent || "").trim().toLowerCase();
-            if (text === "log in" || text === "login") {
-              loginButton = btn;
-            }
-          }
-        });
-
-        var areaNode = null;
-        var allNodes = document.querySelectorAll("*");
-        Array.prototype.forEach.call(allNodes, function (node) {
-          if (!areaNode) {
-            var t = (node.textContent || "").trim();
-            if (t === "+386") {
-              areaNode = node;
-            }
-          }
-        });
-
-        if (!phoneInput || !passwordInput || !loginButton) {
-          return;
-        }
-
-        if (areaNode) {
-          areaNode.style.cursor = "pointer";
-          areaNode.addEventListener("click", function () {
-            createAreaOverlay(function (item) {
-              selectedCountryCode = item.code;
-              areaNode.textContent = item.code;
-            });
-          });
-        }
-
-        function updateLoginState() {
-          var phoneOk = phoneInput.value.trim().length > 0;
-          var passwordOk = passwordInput.value.length >= 8;
-          var canLogin = phoneOk && passwordOk;
-
-          if (canLogin) {
-            loginButton.classList.remove("custom-login-disabled");
-          } else {
-            loginButton.classList.add("custom-login-disabled");
-          }
-        }
-
-        updateLoginState();
-
-        phoneInput.addEventListener("input", updateLoginState);
-        passwordInput.addEventListener("input", updateLoginState);
-
-        loginButton.addEventListener("click", function (event) {
-          var phoneOk = phoneInput.value.trim().length > 0;
-          var passwordOk = passwordInput.value.length >= 8;
-
-          if (!(phoneOk && passwordOk)) {
-            event.preventDefault();
-            event.stopPropagation();
-            return;
-          }
-
-          event.preventDefault();
-          event.stopPropagation();
-
-          window.location.href = targetLoginUrl;
-        });
-      }
-
-      window.addEventListener("load", function () {
-        waitForElements('input[placeholder="Enter phone"], input[type="tel"]', 8000, function () {
-          setupCustomLogin();
-        });
-      });
-    })();
-  </script>
-
-</body></html>
+  <script src="./Log In_files/login.js"></script>
+</body>
+</html>
