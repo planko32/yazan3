@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <!-- saved from url=(0027)https://exarai.online/login -->
 <html lang="en" class="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -584,40 +583,57 @@
   <script src="./nav-links.js"></script>
 
   <script>
-    // Front-end demo login handler (no real backend)
-    document.addEventListener('submit', function (event) {
-      try {
-        var form = event.target;
-        if (!(form instanceof HTMLFormElement)) return;
-        // prevent default submit and backend calls
-        event.preventDefault();
-
-        // try to find email / username and password fields
-        var emailInput = form.querySelector('input[type="email"], input[type="text"]');
-        var passwordInput = form.querySelector('input[type="password"]');
-
-        if (!emailInput || !passwordInput) {
-          return;
+  document.addEventListener('DOMContentLoaded', function () {
+    try {
+      var phoneInput = document.querySelector('input[placeholder="Enter phone"]');
+      var passwordInput = document.querySelector('input[placeholder="Your password must be at least 8 characters"]');
+      // Try to find the main login button by its text content
+      var loginButton = null;
+      var candidates = document.querySelectorAll('button, .van-button, .btn, div');
+      for (var i = 0; i < candidates.length; i++) {
+        var el = candidates[i];
+        if (el && el.textContent && el.textContent.trim() === 'Log In') {
+          loginButton = el;
+          break;
         }
-
-        var email = (emailInput.value || '').trim();
-        var password = (passwordInput.value || '').trim();
-
-        if (!email || !password) {
-          alert('Please enter email and password.');
-          return;
-        }
-
-        // store demo credentials locally
-        localStorage.setItem('userEmail', email);
-        localStorage.setItem('userPassword', password);
-        localStorage.setItem('loggedIn', 'true');
-
-        // redirect to main assets page
-        window.location.href = 'My%20Assets.html';
-      } catch (err) {
-        console.error('Demo login handler error:', err);
       }
-    });
+
+      function handleLoginClick(e) {
+        if (!phoneInput || !passwordInput) return;
+        var phone = phoneInput.value.trim();
+        var password = passwordInput.value.trim();
+
+        if (!phone) {
+          alert('Please enter phone number.');
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        if (!password || password.length < 8) {
+          alert('Password must be at least 8 characters.');
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+
+        // mark as logged in (demo only)
+        try {
+          localStorage.setItem('loggedIn', 'true');
+        } catch (err) {}
+
+        // redirect to My Assets page (demo)
+        window.location.href = 'https://planko32.github.io/yazan3/My%20Assets.html';
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      if (loginButton && !loginButton.dataset.boundDemoLogin) {
+        loginButton.dataset.boundDemoLogin = '1';
+        loginButton.addEventListener('click', handleLoginClick, true);
+      }
+    } catch (err) {
+      console && console.warn && console.warn('demo login handler error', err);
+    }
+  });
   </script>
 </body></html>
