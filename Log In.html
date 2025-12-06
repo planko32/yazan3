@@ -508,121 +508,7 @@
         font-size: 28px;
       }
     }
-  
-/* ==== Custom country modal & login button state ==== */
-.country-modal {
-  position: fixed;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 99999;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-.country-modal.open {
-  display: flex;
-}
-
-.country-modal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-}
-
-.country-modal-panel {
-  position: relative;
-  width: 90%;
-  max-width: 420px;
-  max-height: 80vh;
-  background: #111827;
-  color: #e5e7eb;
-  border-radius: 16px;
-  padding: 16px 16px 8px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-  display: flex;
-  flex-direction: column;
-}
-
-.country-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 4px;
-}
-
-.country-modal-subtitle {
-  font-size: 12px;
-  color: #9ca3af;
-  margin-bottom: 8px;
-}
-
-.country-modal-close {
-  border: none;
-  background: transparent;
-  color: #9ca3af;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.country-search {
-  margin-bottom: 8px;
-}
-
-.country-search-input {
-  width: 100%;
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid #374151;
-  background: #020617;
-  color: #e5e7eb;
-  font-size: 14px;
-}
-
-.country-list {
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-.country-item {
-  width: 100%;
-  text-align: left;
-  border: none;
-  background: transparent;
-  color: #e5e7eb;
-  padding: 8px 6px;
-  border-radius: 10px;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-}
-
-.country-item span {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.country-item small {
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-.country-item:hover {
-  background: #1f2937;
-}
-
-/* Disabled login button style */
-.user-login-box .bt.disabled {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-</style>
+  </style>
   <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/crypto-js-v20251127071734-BXdhhA8o.js">
   <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/highlight-v20251127071734-sLdeLc1g.js">
   <link rel="modulepreload" crossorigin="" href="https://exarai.online/js/vendor-v20251127071734-DckFzIAx.js">
@@ -696,144 +582,233 @@
   </script>
 
   <script src="./nav-links.js"></script>
-
 <script>
-(function () {
-  var prefixBox = document.querySelector(".prefix_box");
-  var phoneInput = document.querySelector(".inp-phone .inp-r input");
-  var passwordInput = document.querySelector('.box-li input[type="password"]');
-  var loginButton = document.querySelector(".user-login-box .bt.flex-center");
-  var signUpSpan = document.querySelector(".box-tips.bottom span");
-  var modal = document.getElementById("country-modal");
+  // Custom login frontend activation (area code + validation)
+  document.addEventListener('DOMContentLoaded', function () {
+    function $(sel) { return document.querySelector(sel); }
 
-  if (!prefixBox || !phoneInput || !passwordInput || !loginButton || !modal) {
-    return;
-  }
+    var phoneInput = document.querySelector('.inp-phone .inp-r input');
+    var pwdInput   = document.querySelector('.user-login-box input[type="password"]');
+    var loginBtn   = document.querySelector('.user-login-box .bt');
+    var rememberRow = document.querySelector('.rember-pass .l');
+    var forgotLink  = document.querySelector('.rember-pass .r');
+    var signUpLink  = document.querySelector('.box-tips.bottom span');
+    var serviceSpan = document.querySelector('.box-tips span:nth-of-type(1)');
+    var privacySpan = document.querySelector('.box-tips span:nth-of-type(2)');
+    var eyeBtn      = document.querySelector('.eye-bt');
+    var prefixBox   = document.querySelector('.prefix_box');
+    var phoneWrapper = document.querySelector('.inp-phone .inp-l');
 
-  var backdrop = modal.querySelector(".country-modal-backdrop");
-  var closeBtn = modal.querySelector(".country-modal-close");
-  var searchInput = modal.querySelector(".country-search-input");
-  var items = Array.prototype.slice.call(
-    modal.querySelectorAll(".country-item")
-  );
+    function showTip(title, text) {
+      try {
+        var box = document.querySelector('.tips_box');
+        if (!box) return;
+        var t = box.querySelector('.title');
+        var p = box.querySelector('.text');
+        if (t) t.textContent = title || '';
+        if (p) p.textContent = text || '';
+        box.style.display = 'flex';
+        setTimeout(function () { box.style.display = 'none'; }, 3000);
+      } catch (e) {}
+    }
 
-  function openModal() {
-    modal.classList.add("open");
-  }
+    // ------------ Area code popup ------------
+    function ensureAreaPopup() {
+      var overlay = document.querySelector('.area-code-overlay');
+      if (overlay) return overlay;
 
-  function closeModal() {
-    modal.classList.remove("open");
-  }
+      overlay = document.createElement('div');
+      overlay.className = 'area-code-overlay';
+      overlay.innerHTML =
+        '<div class="area-code-panel">' +
+        '  <div class="area-code-header">' +
+        '    <span class="title">Select area code</span>' +
+        '    <button type="button" class="close-btn">×</button>' +
+        '  </div>' +
+        '  <div class="area-code-search">' +
+        '    <input type="text" placeholder="Please search for the international dialing code" />' +
+        '  </div>' +
+        '  <div class="area-code-label">Commonly used countries</div>' +
+        '  <div class="area-code-list">' +
+        '    <div class="area-item" data-code="+386"><span class="flag">SI</span><span class="name">Slovenia</span><span class="code">(+386)</span></div>' +
+        '    <div class="area-item" data-code="+507"><span class="flag">PA</span><span class="name">Panama</span><span class="code">(+507)</span></div>' +
+        '    <div class="area-item" data-code="+963"><span class="flag">SY</span><span class="name">Syria</span><span class="code">(+963)</span></div>' +
+        '    <div class="area-item" data-code="+961"><span class="flag">LB</span><span class="name">Republic of Lebanon</span><span class="code">(+961)</span></div>' +
+        '    <div class="area-item" data-code="+357"><span class="flag">CY</span><span class="name">Cyprus</span><span class="code">(+357)</span></div>' +
+        '    <div class="area-item" data-code="+966"><span class="flag">SA</span><span class="name">Saudi Arabia</span><span class="code">(+966)</span></div>' +
+        '  </div>' +
+        '</div>';
 
-  prefixBox.style.cursor = "pointer";
-  prefixBox.addEventListener("click", function (e) {
-    e.preventDefault();
-    openModal();
-  });
+      document.body.appendChild(overlay);
 
-  backdrop.addEventListener("click", closeModal);
-  closeBtn.addEventListener("click", closeModal);
+      var style = document.createElement('style');
+      style.textContent =
+        '.area-code-overlay{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.55);display:none;align-items:flex-end;justify-content:center;z-index:9999;}' +
+        '.area-code-panel{width:100%;max-width:480px;background:#020617;border-radius:16px 16px 0 0;padding:12px 16px 16px;box-sizing:border-box;color:#e5e7eb;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;}' +
+        '.area-code-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}' +
+        '.area-code-header .title{font-size:15px;font-weight:600;}' +
+        '.area-code-header .close-btn{border:none;background:transparent;color:#9ca3af;font-size:22px;line-height:1;padding:0 4px;cursor:pointer;}' +
+        '.area-code-search{margin-bottom:10px;}' +
+        '.area-code-search input{width:100%;border-radius:999px;border:1px solid rgba(148,163,184,0.6);background:#020617;padding:8px 14px;font-size:13px;color:#e5e7eb;outline:none;}' +
+        '.area-code-search input::placeholder{color:#6b7280;}' +
+        '.area-code-label{font-size:12px;color:#9ca3af;margin-bottom:4px;}' +
+        '.area-code-list{max-height:260px;overflow-y:auto;border-radius:12px;background:#020617;}' +
+        '.area-item{display:flex;align-items:center;justify-content:space-between;padding:10px 10px;border-bottom:1px solid rgba(55,65,81,0.7);font-size:14px;}' +
+        '.area-item:last-child{border-bottom:none;}' +
+        '.area-item .flag{width:22px;height:22px;border-radius:999px;background:#111827;display:flex;align-items:center;justify-content:center;font-size:11px;margin-right:10px;}' +
+        '.area-item .name{flex:1;margin-right:8px;}' +
+        '.area-item .code{opacity:0.9;}' +
+        '.area-item.active{background:#111827;}' +
+        '.area-item:hover{background:#0b1220;}' +
+        '@media (min-width:768px){.area-code-panel{max-width:420px;}}';
+      document.head.appendChild(style);
 
-  items.forEach(function (item) {
-    item.addEventListener("click", function () {
-      var code = item.getAttribute("data-code") || "";
-      prefixBox.childNodes[0].textContent = " " + code + " ";
-      prefixBox.setAttribute("data-code", code);
-      closeModal();
-    });
-  });
+      var searchInput = overlay.querySelector('.area-code-search input');
+      var items = Array.prototype.slice.call(overlay.querySelectorAll('.area-item'));
+      var closeBtn = overlay.querySelector('.close-btn');
 
-  if (searchInput) {
-    searchInput.addEventListener("input", function () {
-      var q = this.value.toLowerCase();
-      items.forEach(function (item) {
-        var text = item.textContent.toLowerCase();
-        item.style.display = text.indexOf(q) !== -1 ? "" : "none";
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+          overlay.style.display = 'none';
+        });
+      }
+
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) {
+          overlay.style.display = 'none';
+        }
       });
-    });
-  }
 
-  function validateForm() {
-    var phoneOk = phoneInput.value.trim().length > 0;
-    var passOk = passwordInput.value.trim().length >= 8;
-    var canLogin = phoneOk && passOk;
+      if (searchInput) {
+        searchInput.addEventListener('input', function () {
+          var q = searchInput.value.trim().toLowerCase();
+          items.forEach(function (item) {
+            var txt = item.textContent.toLowerCase();
+            item.style.display = txt.indexOf(q) !== -1 ? 'flex' : 'none';
+          });
+        });
+      }
 
-    if (canLogin) {
-      loginButton.classList.remove("disabled");
-    } else {
-      loginButton.classList.add("disabled");
+      items.forEach(function (item) {
+        item.addEventListener('click', function () {
+          items.forEach(function (it) { it.classList.remove('active'); });
+          item.classList.add('active');
+          var code = item.getAttribute('data-code') || '';
+          if (prefixBox) {
+            prefixBox.textContent = ' ' + code + ' ';
+          }
+          overlay.style.display = 'none';
+        });
+      });
+
+      return overlay;
     }
-  }
 
-  phoneInput.addEventListener("input", validateForm);
-  passwordInput.addEventListener("input", validateForm);
-  validateForm();
-
-  loginButton.addEventListener("click", function (e) {
-    if (loginButton.classList.contains("disabled")) {
-      e.preventDefault();
-      return;
+    function openAreaPopup() {
+      var overlay = ensureAreaPopup();
+      if (overlay) overlay.style.display = 'flex';
     }
-    window.location.href =
-      "https://planko32.github.io/yazan3/My%20Assets.html";
+
+    if (prefixBox) {
+      prefixBox.style.cursor = 'pointer';
+      prefixBox.addEventListener('click', function (e) {
+        e.stopPropagation();
+        openAreaPopup();
+      });
+    }
+    if (phoneWrapper) {
+      phoneWrapper.style.cursor = 'pointer';
+      phoneWrapper.addEventListener('click', function (e) {
+        e.stopPropagation();
+        openAreaPopup();
+      });
+    }
+
+    // ------------ Login validation ------------
+    function isFormValid() {
+      var phone = phoneInput ? phoneInput.value.trim() : '';
+      var pwd = pwdInput ? pwdInput.value : '';
+      if (!phone) return false;
+      if (!pwd || pwd.length < 8) return false;
+      return true;
+    }
+
+    function updateLoginBtn() {
+      if (!loginBtn) return;
+      if (isFormValid()) loginBtn.classList.add('active');
+      else loginBtn.classList.remove('active');
+    }
+
+    if (phoneInput) phoneInput.addEventListener('input', updateLoginBtn);
+    if (pwdInput) pwdInput.addEventListener('input', updateLoginBtn);
+    updateLoginBtn();
+
+    if (loginBtn) {
+      loginBtn.addEventListener('click', function (e) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        if (!isFormValid()) {
+          showTip('Login failed', 'Enter phone and a password of at least 8 characters.');
+          return;
+        }
+        var phone = phoneInput ? phoneInput.value.trim() : '';
+        var remember = rememberRow && rememberRow.classList.contains('on');
+        try {
+          if (remember) localStorage.setItem('demo_phone', phone);
+          else localStorage.removeItem('demo_phone');
+        } catch (err) {}
+        window.location.href = 'https://planko32.github.io/yazan3/My%20Assets.html';
+      });
+    }
+
+    if (rememberRow) {
+      rememberRow.addEventListener('click', function () {
+        if (rememberRow.classList.contains('on')) rememberRow.classList.remove('on');
+        else rememberRow.classList.add('on');
+      });
+    }
+
+    if (eyeBtn && pwdInput) {
+      eyeBtn.addEventListener('click', function () {
+        if (pwdInput.type === 'password') pwdInput.type = 'text';
+        else pwdInput.type = 'password';
+      });
+    }
+
+    if (forgotLink) {
+      forgotLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        showTip('Forgot password', 'This is a demo page. Password reset is not connected yet.');
+      });
+    }
+
+    if (signUpLink) {
+      signUpLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.href = 'Sign Up.html';
+      });
+    }
+
+    if (serviceSpan) {
+      serviceSpan.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.href = 'Service Agreement.html';
+      });
+    }
+    if (privacySpan) {
+      privacySpan.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.href = 'Privacy Agreement.html';
+      });
+    }
+
+    try {
+      var saved = localStorage.getItem('demo_phone');
+      if (saved && phoneInput) {
+        phoneInput.value = saved;
+        updateLoginBtn();
+      }
+    } catch (err) {}
   });
-
-  if (signUpSpan) {
-    signUpSpan.style.cursor = "pointer";
-    signUpSpan.addEventListener("click", function () {
-      window.location.href = "Sign Up.html";
-    });
-  }
-})();
 </script>
-
-
-
-<!-- Country code modal -->
-<div id="country-modal" class="country-modal">
-  <div class="country-modal-backdrop"></div>
-  <div class="country-modal-panel">
-    <div class="country-modal-header">
-      <span>Select area code</span>
-      <button type="button" class="country-modal-close">×</button>
-    </div>
-    <div class="country-modal-subtitle">
-      Please search for the international dialing code
-    </div>
-    <div class="country-search">
-      <input
-        type="text"
-        class="country-search-input"
-        placeholder="Search country or code"
-      >
-    </div>
-    <div class="country-list">
-      <button type="button" class="country-item" data-code="+386">
-        <span>🇸🇮 Slovenia</span>
-        <small>(+386)</small>
-      </button>
-      <button type="button" class="country-item" data-code="+507">
-        <span>🇵🇦 Panama</span>
-        <small>(+507)</small>
-      </button>
-      <button type="button" class="country-item" data-code="+963">
-        <span>🇸🇾 Syria</span>
-        <small>(+963)</small>
-      </button>
-      <button type="button" class="country-item" data-code="+961">
-        <span>🇱🇧 Republic of Lebanon</span>
-        <small>(+961)</small>
-      </button>
-      <button type="button" class="country-item" data-code="+357">
-        <span>🇨🇾 Cyprus</span>
-        <small>(+357)</small>
-      </button>
-      <button type="button" class="country-item" data-code="+966">
-        <span>🇸🇦 Saudi Arabia</span>
-        <small>(+966)</small>
-      </button>
-    </div>
-  </div>
-</div>
 
 </body></html>
