@@ -581,112 +581,92 @@
   });
   </script>
 
-  
-  <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    function showTip(title, text) {
-      try {
-        var box = document.querySelector('.tips_box');
-        if (!box) return;
-        var titleEl = box.querySelector('.title');
-        var textEl = box.querySelector('.text');
-        if (titleEl) titleEl.textContent = title || '';
-        if (textEl) textEl.textContent = text || '';
-        box.style.display = 'flex';
-        setTimeout(function () {
-          box.style.display = 'none';
-        }, 4000);
-      } catch (e) {}
-    }
+  <script src="./nav-links.js"></script>
 
-    var phoneInput = document.querySelector('.inp-phone .inp-r input') || document.querySelector('.inp-phone input[type="text"]');
-    var pwdInput = document.querySelector('.user-login-box input[type="password"]');
-    var loginBtn = document.querySelector('.user-login-box .bt');
-    var rememberRow = document.querySelector('.rember-pass .l');
-    var forgotLink = document.querySelector('.rember-pass .r');
-    var signUpLink = document.querySelector('.box-tips.bottom span');
-    var serviceSpan = document.querySelector('.box-tips span:nth-of-type(1)');
-    var privacySpan = document.querySelector('.box-tips span:nth-of-type(2)');
-    var eyeBtn = document.querySelector('.eye-bt');
-
+<script>
+(function() {
+  // Try to bind demo login logic after Vue app has rendered
+  function tryBindDemoLogin() {
     try {
-      var savedPhone = localStorage.getItem('demo_phone');
-      if (savedPhone && phoneInput) {
-        phoneInput.value = savedPhone;
+      // Find inputs by placeholder text
+      var phoneInput = Array.from(document.querySelectorAll('input')).find(function(el) {
+        return el.placeholder && el.placeholder.toLowerCase().indexOf('enter phone') !== -1;
+      });
+      var passwordInput = Array.from(document.querySelectorAll('input')).find(function(el) {
+        return el.placeholder && el.placeholder.toLowerCase().indexOf('password') !== -1;
+      });
+
+      // Find main "Log In" button by its text
+      var loginButton = null;
+      var candidates = document.querySelectorAll('button, .van-button, .btn, div');
+      for (var i = 0; i < candidates.length; i++) {
+        var el = candidates[i];
+        if (el && el.textContent && el.textContent.trim() === 'Log In') {
+          loginButton = el;
+          break;
+        }
       }
-    } catch (e) {}
 
-    if (rememberRow) {
-      rememberRow.addEventListener('click', function () {
-        if (rememberRow.classList.contains('on')) {
-          rememberRow.classList.remove('on');
-        } else {
-          rememberRow.classList.add('on');
-        }
-      });
-    }
+      if (!phoneInput || !passwordInput || !loginButton) {
+        return false; // not ready yet
+      }
 
-    if (eyeBtn && pwdInput) {
-      eyeBtn.addEventListener('click', function () {
-        if (pwdInput.type === 'password') {
-          pwdInput.type = 'text';
-        } else {
-          pwdInput.type = 'password';
-        }
-      });
-    }
-
-    if (loginBtn) {
-      loginBtn.addEventListener('click', function () {
-        var phone = phoneInput ? phoneInput.value.trim() : '';
-        var pwd = pwdInput ? pwdInput.value : '';
-
-        if (!phone) {
-          showTip('Login failed', 'Please enter your phone number.');
-          return;
-        }
-        if (!pwd || pwd.length < 8) {
-          showTip('Login failed', 'Password must be at least 8 characters.');
-          return;
-        }
-
-        var remember = rememberRow && rememberRow.classList.contains('on');
+      function handleLoginClick(e) {
         try {
-          if (remember) {
-            localStorage.setItem('demo_phone', phone);
-          } else {
-            localStorage.removeItem('demo_phone');
+          var phone = phoneInput.value ? phoneInput.value.trim() : '';
+          var pwd = passwordInput.value ? passwordInput.value.trim() : '';
+
+          // Basic front-end validation
+          if (!phone) {
+            alert('Please enter phone number.');
+            e.preventDefault();
+            e.stopPropagation();
+            return;
           }
-        } catch (e) {}
+          if (!pwd || pwd.length < 8) {
+            alert('Password must be at least 8 characters.');
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
 
-        window.location.href = 'My Assets.html';
-      });
-    }
+          // Demo only: mark as logged in in localStorage
+          try {
+            localStorage.setItem('loggedIn', 'true');
+            localStorage.setItem('loggedInPhone', phone);
+          } catch (err) {
+            console && console.warn && console.warn('localStorage error', err);
+          }
 
-    if (forgotLink) {
-      forgotLink.addEventListener('click', function () {
-        showTip('Forgot password', 'This is a demo interface. Password reset is not connected yet.');
-      });
-    }
+          // Redirect to My Assets (demo)
+          window.location.href = 'https://planko32.github.io/yazan3/My%20Assets.html';
+          e.preventDefault();
+          e.stopPropagation();
+        } catch (err) {
+          console && console.warn && console.warn('demo login click error', err);
+        }
+      }
 
-    if (signUpLink) {
-      signUpLink.addEventListener('click', function () {
-        window.location.href = 'Sign Up.html';
-      });
-    }
+      if (!loginButton.dataset.boundDemoLogin) {
+        loginButton.dataset.boundDemoLogin = '1';
+        loginButton.addEventListener('click', handleLoginClick, true);
+      }
 
-    if (serviceSpan) {
-      serviceSpan.addEventListener('click', function () {
-        window.location.href = 'Service Agreement.html';
-      });
+      return true;
+    } catch (err) {
+      console && console.warn && console.warn('bind demo login error', err);
+      return false;
     }
-    if (privacySpan) {
-      privacySpan.addEventListener('click', function () {
-        window.location.href = 'Privacy Agreement.html';
-      });
-    }
-  });
-  </script>
+  }
 
-<script src="./nav-links.js"></script>
+  // Poll until Vue app has mounted
+  var attempts = 0;
+  var maxAttempts = 40; // ~20 seconds
+  var timer = setInterval(function() {
+    if (tryBindDemoLogin() || attempts++ >= maxAttempts) {
+      clearInterval(timer);
+    }
+  }, 500);
+})();
+</script>
 </body></html>
