@@ -639,19 +639,24 @@
         panel.style.padding = '12px 16px 16px';
         panel.style.color = '#e5e7eb';
         panel.style.fontFamily = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-        panel.innerHTML =
-          '<div style="font-size:15px;font-weight:600;margin-bottom:8px;text-align:center;">Select country/region</div>' +
+        
+panel.innerHTML =
+          '<div style="padding:8px 0 4px;font-size:15px;font-weight:600;text-align:center;">Select area code</div>' +
+          '<div style="padding:0 0 8px 0;">' +
+          '  <div style="margin:0 0 8px 0;padding:0 16px;">' +
+          '    <input type="text" placeholder="Please search for the international dialing code" style="width:100%;height:36px;border-radius:8px;border:1px solid rgba(148,163,184,0.4);background:#020617;color:#e5e7eb;padding:0 10px;font-size:13px;" />' +
+          '  </div>' +
+          '  <div style="padding:0 16px 4px;font-size:12px;color:rgba(148,163,184,0.9);">Commonly used countries</div>' +
+          '</div>' +
           '<div class="country-popup-list" style="max-height:260px;overflow-y:auto;font-size:14px;">' +
-          '  <div data-code="+1"   class="country-item" style="padding:10px 6px;border-bottom:1px solid rgba(148,163,184,0.25);">+1 United States</div>' +
-          '  <div data-code="+44"  class="country-item" style="padding:10px 6px;border-bottom:1px solid rgba(148,163,184,0.25);">+44 United Kingdom</div>' +
-          '  <div data-code="+386" class="country-item" style="padding:10px 6px;border-bottom:1px solid rgba(148,163,184,0.25);">+386 Slovenia</div>' +
-          '  <div data-code="+966" class="country-item" style="padding:10px 6px;border-bottom:1px solid rgba(148,163,184,0.25);">+966 Saudi Arabia</div>' +
-          '  <div data-code="+963" class="country-item" style="padding:10px 6px;border-bottom:1px solid rgba(148,163,184,0.25);">+963 Syria</div>' +
-          '  <div data-code="+962" class="country-item" style="padding:10px 6px;border-bottom:1px solid rgba(148,163,184,0.25);">+962 Jordan</div>' +
-          '  <div data-code="+971" class="country-item" style="padding:10px 6px;">+971 UAE</div>' +
+          '  <div data-code="+386" class="country-item" style="padding:10px 16px;border-bottom:1px solid rgba(148,163,184,0.25);">Slovenia (+386)</div>' +
+          '  <div data-code="+507" class="country-item" style="padding:10px 16px;border-bottom:1px solid rgba(148,163,184,0.25);">Panama (+507)</div>' +
+          '  <div data-code="+963" class="country-item" style="padding:10px 16px;border-bottom:1px solid rgba(148,163,184,0.25);">Syria (+963)</div>' +
+          '  <div data-code="+961" class="country-item" style="padding:10px 16px;border-bottom:1px solid rgba(148,163,184,0.25);">Republic of Lebanon (+961)</div>' +
+          '  <div data-code="+357" class="country-item" style="padding:10px 16px;border-bottom:1px solid rgba(148,163,184,0.25);">Cyprus (+357)</div>' +
+          '  <div data-code="+966" class="country-item" style="padding:10px 16px;">Saudi Arabia (+966)</div>' +
           '</div>';
-
-        overlay.appendChild(panel);
+overlay.appendChild(panel);
         document.body.appendChild(overlay);
 
         overlay.addEventListener('click', function (e) {
@@ -746,7 +751,8 @@
 
     // Login
     if (loginBtn) {
-      loginBtn.addEventListener('click', function () {
+      loginBtn.addEventListener('click', function (e) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
         if (!isFormValid()) {
           showTip('Login failed', 'Enter phone and a password of at least 8 characters.');
           return;
@@ -789,6 +795,16 @@
         window.location.href = 'Privacy Agreement.html';
       });
     }
+
+    // Prevent default submit on any parent form (safety)
+    var form = loginBtn && loginBtn.closest ? loginBtn.closest('form') : null;
+    if (form) {
+      form.addEventListener('submit', function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      });
+    }
+
   });
   </script>
 
