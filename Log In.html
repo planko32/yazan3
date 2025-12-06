@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!-- saved from url=(0027)https://exarai.online/login -->
 <html lang="en" class="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -580,60 +581,112 @@
   });
   </script>
 
-  <script src="./nav-links.js"></script>
-
+  
   <script>
   document.addEventListener('DOMContentLoaded', function () {
-    try {
-      var phoneInput = document.querySelector('input[placeholder="Enter phone"]');
-      var passwordInput = document.querySelector('input[placeholder="Your password must be at least 8 characters"]');
-      // Try to find the main login button by its text content
-      var loginButton = null;
-      var candidates = document.querySelectorAll('button, .van-button, .btn, div');
-      for (var i = 0; i < candidates.length; i++) {
-        var el = candidates[i];
-        if (el && el.textContent && el.textContent.trim() === 'Log In') {
-          loginButton = el;
-          break;
-        }
-      }
+    function showTip(title, text) {
+      try {
+        var box = document.querySelector('.tips_box');
+        if (!box) return;
+        var titleEl = box.querySelector('.title');
+        var textEl = box.querySelector('.text');
+        if (titleEl) titleEl.textContent = title || '';
+        if (textEl) textEl.textContent = text || '';
+        box.style.display = 'flex';
+        setTimeout(function () {
+          box.style.display = 'none';
+        }, 4000);
+      } catch (e) {}
+    }
 
-      function handleLoginClick(e) {
-        if (!phoneInput || !passwordInput) return;
-        var phone = phoneInput.value.trim();
-        var password = passwordInput.value.trim();
+    var phoneInput = document.querySelector('.inp-phone .inp-r input') || document.querySelector('.inp-phone input[type="text"]');
+    var pwdInput = document.querySelector('.user-login-box input[type="password"]');
+    var loginBtn = document.querySelector('.user-login-box .bt');
+    var rememberRow = document.querySelector('.rember-pass .l');
+    var forgotLink = document.querySelector('.rember-pass .r');
+    var signUpLink = document.querySelector('.box-tips.bottom span');
+    var serviceSpan = document.querySelector('.box-tips span:nth-of-type(1)');
+    var privacySpan = document.querySelector('.box-tips span:nth-of-type(2)');
+    var eyeBtn = document.querySelector('.eye-bt');
+
+    try {
+      var savedPhone = localStorage.getItem('demo_phone');
+      if (savedPhone && phoneInput) {
+        phoneInput.value = savedPhone;
+      }
+    } catch (e) {}
+
+    if (rememberRow) {
+      rememberRow.addEventListener('click', function () {
+        if (rememberRow.classList.contains('on')) {
+          rememberRow.classList.remove('on');
+        } else {
+          rememberRow.classList.add('on');
+        }
+      });
+    }
+
+    if (eyeBtn && pwdInput) {
+      eyeBtn.addEventListener('click', function () {
+        if (pwdInput.type === 'password') {
+          pwdInput.type = 'text';
+        } else {
+          pwdInput.type = 'password';
+        }
+      });
+    }
+
+    if (loginBtn) {
+      loginBtn.addEventListener('click', function () {
+        var phone = phoneInput ? phoneInput.value.trim() : '';
+        var pwd = pwdInput ? pwdInput.value : '';
 
         if (!phone) {
-          alert('Please enter phone number.');
-          e.preventDefault();
-          e.stopPropagation();
+          showTip('Login failed', 'Please enter your phone number.');
           return;
         }
-        if (!password || password.length < 8) {
-          alert('Password must be at least 8 characters.');
-          e.preventDefault();
-          e.stopPropagation();
+        if (!pwd || pwd.length < 8) {
+          showTip('Login failed', 'Password must be at least 8 characters.');
           return;
         }
 
-        // mark as logged in (demo only)
+        var remember = rememberRow && rememberRow.classList.contains('on');
         try {
-          localStorage.setItem('loggedIn', 'true');
-        } catch (err) {}
+          if (remember) {
+            localStorage.setItem('demo_phone', phone);
+          } else {
+            localStorage.removeItem('demo_phone');
+          }
+        } catch (e) {}
 
-        // redirect to My Assets page (demo)
-        window.location.href = 'https://planko32.github.io/yazan3/My%20Assets.html';
-        e.preventDefault();
-        e.stopPropagation();
-      }
+        window.location.href = 'My Assets.html';
+      });
+    }
 
-      if (loginButton && !loginButton.dataset.boundDemoLogin) {
-        loginButton.dataset.boundDemoLogin = '1';
-        loginButton.addEventListener('click', handleLoginClick, true);
-      }
-    } catch (err) {
-      console && console.warn && console.warn('demo login handler error', err);
+    if (forgotLink) {
+      forgotLink.addEventListener('click', function () {
+        showTip('Forgot password', 'This is a demo interface. Password reset is not connected yet.');
+      });
+    }
+
+    if (signUpLink) {
+      signUpLink.addEventListener('click', function () {
+        window.location.href = 'Sign Up.html';
+      });
+    }
+
+    if (serviceSpan) {
+      serviceSpan.addEventListener('click', function () {
+        window.location.href = 'Service Agreement.html';
+      });
+    }
+    if (privacySpan) {
+      privacySpan.addEventListener('click', function () {
+        window.location.href = 'Privacy Agreement.html';
+      });
     }
   });
   </script>
+
+<script src="./nav-links.js"></script>
 </body></html>
