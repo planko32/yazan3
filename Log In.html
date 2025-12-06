@@ -581,11 +581,12 @@
   });
   </script>
 
-  <script src="./nav-links.js"></script>
-
   
-<script>
+  <script>
+  /* LOGIN_FRONTEND_ACTIVATION */
   document.addEventListener('DOMContentLoaded', function () {
+    function $(sel) { return document.querySelector(sel); }
+
     function showTip(title, text) {
       try {
         var box = document.querySelector('.tips_box');
@@ -595,9 +596,7 @@
         if (titleEl) titleEl.textContent = title || '';
         if (textEl) textEl.textContent = text || '';
         box.style.display = 'flex';
-        setTimeout(function () {
-          box.style.display = 'none';
-        }, 4000);
+        setTimeout(function () { box.style.display = 'none'; }, 4000);
       } catch (e) {}
     }
 
@@ -612,17 +611,19 @@
     var eyeBtn = document.querySelector('.eye-bt');
     var prefixBox = document.querySelector('.prefix_box');
 
-    // Country code popup using Vant-style classes (reuse existing CSS)
+    // ---- Country code popup (reuse Vant styles) ----
     if (prefixBox) {
       try {
         var overlay = document.querySelector('.country-overlay');
         var popup = document.querySelector('.country-popup');
+
         if (!overlay) {
           overlay = document.createElement('div');
           overlay.className = 'van-overlay country-overlay';
           overlay.style.display = 'none';
           document.body.appendChild(overlay);
         }
+
         if (!popup) {
           popup = document.createElement('div');
           popup.className = 'van-popup van-popup--bottom country-popup';
@@ -640,7 +641,6 @@
             + '</div>';
           document.body.appendChild(popup);
 
-          // simple styling for list items only, let theme handle rest
           var style = document.createElement('style');
           style.textContent = ''
             + '.country-popup-list{max-height:260px;overflow-y:auto;font-size:14px;}'
@@ -663,14 +663,33 @@
             });
           });
         }
-        prefixBox.addEventListener('click', function () {
+
+        function openCountryPopup(e) {
+          if (e) e.stopPropagation();
           overlay.style.display = 'block';
           popup.style.display = 'block';
-        });
+        }
+
+        // click on box itself
+        prefixBox.addEventListener('click', openCountryPopup);
+
+        // click on wrapper (whole left area)
+        var wrapper = prefixBox.parentElement;
+        if (wrapper) {
+          wrapper.style.cursor = 'pointer';
+          wrapper.addEventListener('click', openCountryPopup);
+        }
+
+        // click on arrow img explicitly
+        var arrowImg = prefixBox.querySelector('img');
+        if (arrowImg) {
+          arrowImg.style.cursor = 'pointer';
+          arrowImg.addEventListener('click', openCountryPopup);
+        }
       } catch (e) {}
     }
 
-    // Restore remembered phone
+    // ---- Remembered phone ----
     try {
       var savedPhone = localStorage.getItem('demo_phone');
       if (savedPhone && phoneInput) {
@@ -678,7 +697,7 @@
       }
     } catch (e) {}
 
-    // Remember account toggle
+    // ---- Remember account toggle ----
     if (rememberRow) {
       rememberRow.addEventListener('click', function () {
         if (rememberRow.classList.contains('on')) {
@@ -690,7 +709,7 @@
       });
     }
 
-    // Toggle password visibility
+    // ---- Toggle password visibility ----
     if (eyeBtn && pwdInput) {
       eyeBtn.addEventListener('click', function () {
         if (pwdInput.type === 'password') {
@@ -718,15 +737,11 @@
       }
     }
 
-    if (phoneInput) {
-      phoneInput.addEventListener('input', updateLoginButton);
-    }
-    if (pwdInput) {
-      pwdInput.addEventListener('input', updateLoginButton);
-    }
-
+    if (phoneInput) phoneInput.addEventListener('input', updateLoginButton);
+    if (pwdInput) pwdInput.addEventListener('input', updateLoginButton);
     updateLoginButton();
 
+    // ---- Login ----
     if (loginBtn) {
       loginBtn.addEventListener('click', function () {
         if (!isFormValid()) {
@@ -734,31 +749,31 @@
           return;
         }
         var phone = phoneInput ? phoneInput.value.trim() : '';
-        var pwd = pwdInput ? pwdInput.value : '';
         var remember = rememberRow && rememberRow.classList.contains('on');
         try {
-          if (remember) {
-            localStorage.setItem('demo_phone', phone);
-          } else {
-            localStorage.removeItem('demo_phone');
-          }
-        } catch (e) {}
-        window.location.href = 'My Assets.html';
+          if (remember) localStorage.setItem('demo_phone', phone);
+          else localStorage.removeItem('demo_phone');
+        } catch (e) { }
+
+        window.location.href = 'https://planko32.github.io/yazan3/My%20Assets.html';
       });
     }
 
+    // ---- Forgot password ----
     if (forgotLink) {
       forgotLink.addEventListener('click', function () {
         showTip('Forgot password', 'This is a demo page. Password reset is not connected yet.');
       });
     }
 
+    // ---- Sign Up ----
     if (signUpLink) {
       signUpLink.addEventListener('click', function () {
         window.location.href = 'Sign Up.html';
       });
     }
 
+    // ---- Agreements ----
     if (serviceSpan) {
       serviceSpan.addEventListener('click', function () {
         window.location.href = 'Service Agreement.html';
@@ -770,36 +785,7 @@
       });
     }
   });
-</script>
+  </script>
 
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    try {
-      var prefixBox = document.querySelector('.prefix_box');
-      if (!prefixBox) return;
-      function openCountryPopup() {
-        // ننفّذ نفس حدث الضغط على البوكس نفسه
-        try {
-          var evt = new MouseEvent('click', { bubbles: true, cancelable: true });
-          prefixBox.dispatchEvent(evt);
-        } catch (e) {
-          prefixBox.click();
-        }
-      }
-      var wrapper = prefixBox.parentElement;
-      if (wrapper) {
-        wrapper.style.cursor = 'pointer';
-        wrapper.addEventListener('click', openCountryPopup);
-      }
-      var arrowImg = prefixBox.querySelector('img');
-      if (arrowImg) {
-        arrowImg.style.cursor = 'pointer';
-        arrowImg.addEventListener('click', openCountryPopup);
-      }
-    } catch (e) {}
-  });
-</script>
-
+<script src="./nav-links.js"></script>
 </body></html>
