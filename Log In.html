@@ -583,90 +583,198 @@
 
   <script src="./nav-links.js"></script>
 
-<script>
-(function() {
-  // Try to bind demo login logic after Vue app has rendered
-  function tryBindDemoLogin() {
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    function $(sel) { return document.querySelector(sel); }
+    function showTip(title, text) {
+      try {
+        var box = document.querySelector('.tips_box');
+        if (!box) return;
+        var titleEl = box.querySelector('.title');
+        var textEl = box.querySelector('.text');
+        if (titleEl) titleEl.textContent = title || '';
+        if (textEl) textEl.textContent = text || '';
+        box.style.display = 'flex';
+        setTimeout(function () {
+          box.style.display = 'none';
+        }, 4000);
+      } catch (e) {}
+    }
+
+    // Inputs & elements
+    var phoneInput = document.querySelector('.inp-phone .inp-r input');
+    var pwdInput = document.querySelector('.user-login-box input[type="password"]');
+    var loginBtn = document.querySelector('.user-login-box .bt');
+    var rememberRow = document.querySelector('.rember-pass .l');
+    var forgotLink = document.querySelector('.rember-pass .r');
+    var signUpLink = document.querySelector('.box-tips.bottom span');
+    var serviceSpan = document.querySelector('.box-tips span:nth-of-type(1)');
+    var privacySpan = document.querySelector('.box-tips span:nth-of-type(2)');
+    var eyeBtn = document.querySelector('.eye-bt');
+    var prefixBox = document.querySelector('.prefix_box');
+
+    // Build simple country selector popup
+    if (prefixBox) {
+      try {
+        var existingPopup = document.querySelector('.country-popup-overlay');
+        if (!existingPopup) {
+          var overlay = document.createElement('div');
+          overlay.className = 'country-popup-overlay';
+          overlay.innerHTML = ''
+            + '<div class="country-popup">'
+            + '  <div class="country-popup-title">Select country/region</div>'
+            + '  <div class="country-popup-list">'
+            + '    <div data-code="+1" class="country-item">+1 United States</div>'
+            + '    <div data-code="+44" class="country-item">+44 United Kingdom</div>'
+            + '    <div data-code="+386" class="country-item">+386 Slovenia</div>'
+            + '    <div data-code="+966" class="country-item">+966 Saudi Arabia</div>'
+            + '    <div data-code="+963" class="country-item">+963 Syria</div>'
+            + '    <div data-code="+962" class="country-item">+962 Jordan</div>'
+            + '    <div data-code="+971" class="country-item">+971 UAE</div>'
+            + '  </div>'
+            + '</div>';
+          document.body.appendChild(overlay);
+
+          var style = document.createElement('style');
+          style.textContent = ''
+            + '.country-popup-overlay{position:fixed;left:0;top:0;width:100%;height:100%;'
+            + 'background:rgba(0,0,0,0.55);display:none;align-items:flex-end;justify-content:center;z-index:99999;}'
+            + '.country-popup{width:100%;max-width:480px;background:#020617;border-radius:16px 16px 0 0;'
+            + 'padding:12px 16px 16px;box-sizing:border-box;color:#e5e7eb;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;}'
+            + '.country-popup-title{font-size:15px;font-weight:600;margin-bottom:8px;text-align:center;}'
+            + '.country-popup-list{max-height:260px;overflow-y:auto;font-size:14px;}'
+            + '.country-item{padding:10px 6px;border-bottom:1px solid rgba(148,163,184,0.25);display:flex;align-items:center;justify-content:flex-start;}'
+            + '.country-item:last-child{border-bottom:none;}'
+            + '.country-item:hover{background:rgba(15,23,42,0.9);}';
+          document.head.appendChild(style);
+
+          overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) {
+              overlay.style.display = 'none';
+            }
+          });
+          overlay.querySelectorAll('.country-item').forEach(function (item) {
+            item.addEventListener('click', function () {
+              var code = item.getAttribute('data-code') || '';
+              try {
+                var txt = prefixBox.textContent || '';
+                prefixBox.textContent = ' ' + code + ' ';
+              } catch (e) {}
+              overlay.style.display = 'none';
+            });
+          });
+        }
+        prefixBox.addEventListener('click', function () {
+          var ov = document.querySelector('.country-popup-overlay');
+          if (ov) ov.style.display = 'flex';
+        });
+      } catch (e) {}
+    }
+
+    // Restore remembered phone
     try {
-      // Find inputs by placeholder text
-      var phoneInput = Array.from(document.querySelectorAll('input')).find(function(el) {
-        return el.placeholder && el.placeholder.toLowerCase().indexOf('enter phone') !== -1;
-      });
-      var passwordInput = Array.from(document.querySelectorAll('input')).find(function(el) {
-        return el.placeholder && el.placeholder.toLowerCase().indexOf('password') !== -1;
-      });
+      var savedPhone = localStorage.getItem('demo_phone');
+      if (savedPhone && phoneInput) {
+        phoneInput.value = savedPhone;
+      }
+    } catch (e) {}
 
-      // Find main "Log In" button by its text
-      var loginButton = null;
-      var candidates = document.querySelectorAll('button, .van-button, .btn, div');
-      for (var i = 0; i < candidates.length; i++) {
-        var el = candidates[i];
-        if (el && el.textContent && el.textContent.trim() === 'Log In') {
-          loginButton = el;
-          break;
+    // Toggle remember account
+    if (rememberRow) {
+      rememberRow.addEventListener('click', function () {
+        if (rememberRow.classList.contains('on')) {
+          rememberRow.classList.remove('on');
+        } else {
+          rememberRow.classList.add('on');
         }
-      }
+        updateLoginButton();
+      });
+    }
 
-      if (!phoneInput || !passwordInput || !loginButton) {
-        return false; // not ready yet
-      }
-
-      function handleLoginClick(e) {
-        try {
-          var phone = phoneInput.value ? phoneInput.value.trim() : '';
-          var pwd = passwordInput.value ? passwordInput.value.trim() : '';
-
-          // Basic front-end validation
-          if (!phone) {
-            alert('Please enter phone number.');
-            e.preventDefault();
-            e.stopPropagation();
-            return;
-          }
-          if (!pwd || pwd.length < 8) {
-            alert('Password must be at least 8 characters.');
-            e.preventDefault();
-            e.stopPropagation();
-            return;
-          }
-
-          // Demo only: mark as logged in in localStorage
-          try {
-            localStorage.setItem('loggedIn', 'true');
-            localStorage.setItem('loggedInPhone', phone);
-          } catch (err) {
-            console && console.warn && console.warn('localStorage error', err);
-          }
-
-          // Redirect to My Assets (demo)
-          window.location.href = 'https://planko32.github.io/yazan3/My%20Assets.html';
-          e.preventDefault();
-          e.stopPropagation();
-        } catch (err) {
-          console && console.warn && console.warn('demo login click error', err);
+    // Toggle password visibility
+    if (eyeBtn && pwdInput) {
+      eyeBtn.addEventListener('click', function () {
+        if (pwdInput.type === 'password') {
+          pwdInput.type = 'text';
+        } else {
+          pwdInput.type = 'password';
         }
-      }
+      });
+    }
 
-      if (!loginButton.dataset.boundDemoLogin) {
-        loginButton.dataset.boundDemoLogin = '1';
-        loginButton.addEventListener('click', handleLoginClick, true);
-      }
-
+    function isFormValid() {
+      var phone = phoneInput ? phoneInput.value.trim() : '';
+      var pwd = pwdInput ? pwdInput.value : '';
+      if (!phone) return false;
+      if (!pwd || pwd.length < 8) return false;
       return true;
-    } catch (err) {
-      console && console.warn && console.warn('bind demo login error', err);
-      return false;
     }
-  }
 
-  // Poll until Vue app has mounted
-  var attempts = 0;
-  var maxAttempts = 40; // ~20 seconds
-  var timer = setInterval(function() {
-    if (tryBindDemoLogin() || attempts++ >= maxAttempts) {
-      clearInterval(timer);
+    function updateLoginButton() {
+      if (!loginBtn) return;
+      if (isFormValid()) {
+        loginBtn.classList.add('active');
+      } else {
+        loginBtn.classList.remove('active');
+      }
     }
-  }, 500);
-})();
-</script>
+
+    if (phoneInput) {
+      phoneInput.addEventListener('input', updateLoginButton);
+    }
+    if (pwdInput) {
+      pwdInput.addEventListener('input', updateLoginButton);
+    }
+
+    updateLoginButton();
+
+    // Login logic
+    if (loginBtn) {
+      loginBtn.addEventListener('click', function () {
+        if (!isFormValid()) {
+          showTip('Login failed', 'Enter phone and a password of at least 8 characters.');
+          return;
+        }
+        var phone = phoneInput ? phoneInput.value.trim() : '';
+        var pwd = pwdInput ? pwdInput.value : '';
+        var remember = rememberRow && rememberRow.classList.contains('on');
+        try {
+          if (remember) {
+            localStorage.setItem('demo_phone', phone);
+          } else {
+            localStorage.removeItem('demo_phone');
+          }
+        } catch (e) {}
+        window.location.href = 'My Assets.html';
+      });
+    }
+
+    // Forgot password
+    if (forgotLink) {
+      forgotLink.addEventListener('click', function () {
+        showTip('Forgot password', 'This is a demo page. Password reset is not connected yet.');
+      });
+    }
+
+    // Sign Up
+    if (signUpLink) {
+      signUpLink.addEventListener('click', function () {
+        window.location.href = 'Sign Up.html';
+      });
+    }
+
+    // Agreements
+    if (serviceSpan) {
+      serviceSpan.addEventListener('click', function () {
+        window.location.href = 'Service Agreement.html';
+      });
+    }
+    if (privacySpan) {
+      privacySpan.addEventListener('click', function () {
+        window.location.href = 'Privacy Agreement.html';
+      });
+    }
+  });
+  </script>
+
 </body></html>
